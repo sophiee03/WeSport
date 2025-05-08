@@ -1,0 +1,24 @@
+openapi: 3.0.3
+info:
+  title: API WeSport
+  version: 1.0.0
+paths:
+  /utenti:
+    $ref: './paths/utenti.yaml'
+    /utentiRegistrati:
+      $ref: './paths/utenti/utentiRegistrati.yaml'
+    /aziendaVerificata:
+      $ref: './paths/utenti/aziendaVerificata.yaml'
+  /annunci:
+    $ref: './paths/annunci.yaml'
+    /annuncio/{annuncioID}/chat:
+      $ref: './paths/annunci/chat.yaml'
+  /segnalazioni:
+    $ref: './paths/segnalazioni.yaml'
+  /novita:
+    $ref: './paths/novita.yaml'
+  /sport:
+    /areeSportive:
+      $ref: './paths/sport/areeSportive.yaml'
+    /percorsi:
+      $ref: './paths/sport/percorsi.yaml'

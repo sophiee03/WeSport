@@ -1,0 +1,15 @@
+type: object
+properties:
+  nomeUtente:
+    type: string
+  email: 
+    type: string
+    format: email
+  punti:
+    type: int
+  fotoProfilo:
+    type: string
+    description: "URL della foto del profilo"
+  selfDescription:
+    type: string
+  

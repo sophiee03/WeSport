@@ -1,0 +1,17 @@
+Chat:
+  type: object
+  properties:
+    id:
+      type: string
+    annuncioId:
+      type: string
+      description: ID dell'annuncio a cui è collegata la chat
+    partecipanti:
+      type: array
+      items:
+        type: string
+      description: ID degli utenti coinvolti nella chat
+    messaggi:
+      type: array
+      items:
+        $ref: '#/components/schemas/Messaggio'

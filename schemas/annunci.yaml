@@ -1,0 +1,17 @@
+type: object
+properties:
+  idAnnuncio:
+    type: string
+  idCapogruppo:
+    type: string
+    description: "Id dell'utente che ha creato l'annuncio"
+  Npersone:
+    type: int
+  description:
+    type: string
+  dataOrario:
+    type: date-time
+  iscritti:
+    type: array
+  visibilita:
+    type: boolean
