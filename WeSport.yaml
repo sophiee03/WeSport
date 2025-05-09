@@ -2,23 +2,59 @@ openapi: 3.0.3
 info:
   title: API WeSport
   version: 1.0.0
+
+servers:
+  - url: https://api.weSport.it/v1
+
+#------------------------------------------------------
+
 paths:
-  /utenti:
-    $ref: './paths/utenti.yaml'
-    /utentiRegistrati:
-      $ref: './paths/utenti/utentiRegistrati.yaml'
-    /aziendaVerificata:
-      $ref: './paths/utenti/aziendaVerificata.yaml'
   /annunci:
     $ref: './paths/annunci.yaml'
-    /annuncio/{annuncioID}/chat:
-      $ref: './paths/annunci/chat.yaml'
+  /areesportive:
+    $ref: './paths/areesportive.yaml'
+  /aziende:
+    $ref: './paths/aziende.yaml'
+  /chats:
+    $ref: './paths/chats.yaml'
+  /messaggi:
+    $ref: './paths/messaggi.yaml'
+  /percorsi:
+    $ref: './paths/percorsi.yaml'
+  /sports:
+    $ref: './paths/sports.yaml'
+  /utentiregistrati:
+    $ref: './paths/utentiregistrati.yaml'
+  /utenti:
+    $ref: './paths/utenti.yaml'
   /segnalazioni:
     $ref: './paths/segnalazioni.yaml'
-  /novita:
-    $ref: './paths/novita.yaml'
-  /sport:
-    /areeSportive:
-      $ref: './paths/sport/areeSportive.yaml'
-    /percorsi:
-      $ref: './paths/sport/percorsi.yaml'
+  /avvisi:
+    $ref: './paths/avvisi.yaml'
+
+#------------------------------------------------------------
+
+components:
+  schemas:
+    annunci:
+      $ref: './components/schemas/annuncio.yaml'
+    areasportiva:
+      $ref: './components/schemas/areasportiva.yaml'
+    azienda:
+      $ref: './components/schemas/azienda.yaml'
+    chat:
+      $ref: './components/schemas/chat.yaml'
+    messaggio:
+      $ref: './components/schemas/messaggio.yaml'
+    percorso:
+      $ref: './components/schemas/percorso.yaml'
+    sport:
+      $ref: './components/schemas/sport.yaml'
+    utenteregistrato:
+      $ref: './components/schemas/utenteregistrato.yaml'
+    utente:
+      $ref: './components/schemas/utente.yaml'
+    segnalazione:
+      $ref: './components/schemas/segnalazione.yaml'
+    avviso:
+      $ref: './components/schemas/avviso.yaml'

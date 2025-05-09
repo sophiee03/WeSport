@@ -7,11 +7,21 @@ properties:
     description: "Id dell'utente che ha creato l'annuncio"
   Npersone:
     type: int
+  categoria:
+    type: string
   description:
     type: string
   dataOrario:
     type: date-time
   iscritti:
     type: array
+    items:
+      type: string
+    description: "ID degli utenti iscritti all'annuncio"
   visibilita:
     type: boolean
+required:
+  - idAnnuncio
+  - idCapogruppo
+  - categoria
+  - Npersone

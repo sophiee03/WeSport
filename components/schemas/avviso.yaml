@@ -1,0 +1,27 @@
+type: object
+properties:
+  idavviso:
+    type: int
+  data:
+    type: date
+  categoria:
+    type: string
+    enum:
+      - evento
+      - chiusura/manutenzione
+      - festival
+  stato:
+    type: string
+    enum:
+      - in_corso
+      - annullato
+      - rimandato
+      - concluso
+      - coming soon
+  testo: 
+    type: string
+required:
+  - idavviso 
+  - data
+  - categoria
+

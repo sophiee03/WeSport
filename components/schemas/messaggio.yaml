@@ -1,0 +1,12 @@
+type: object
+properties:
+  data:
+    type: date
+  mittente:
+    type: string
+    description: "id dell'utente che ha inviato il messaggio"
+  testo: 
+    type: string
+required:
+  - mittente
+  - data

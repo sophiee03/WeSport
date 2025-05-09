@@ -12,4 +12,9 @@ properties:
     description: "URL della foto del profilo"
   selfDescription:
     type: string
+required:
+  - nomeAzienda
+  - email
+  #??????????????
+  - verifica
   

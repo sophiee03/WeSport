@@ -1,0 +1,20 @@
+type: object
+properties:
+  id:
+    type: string
+  idannuncio:
+    type: string
+    description: ID dell'annuncio a cui è collegata la chat
+  # da togliere? perchè lo abbiamo già nell'annuncio
+  #partecipanti:
+  #  type: array
+  #  items:
+  #    type: string
+  #  description: ID degli utenti coinvolti nella chat
+  messaggi:
+    type: array
+    items:
+      $ref: '#/components/schemas/Messaggi'
+required:
+  - id
+  - idannuncio

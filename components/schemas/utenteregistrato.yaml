@@ -1,15 +1,18 @@
 type: object
 properties:
-  nomeUtente:
+  nomeutente:
     type: string
   email: 
     type: string
     format: email
   punti:
     type: int
-  fotoProfilo:
+  fotoprofilo:
     type: string
     description: "URL della foto del profilo"
-  selfDescription:
+  selfdescription:
     type: string
+required:
+  - email
+  - nomeutente
   
