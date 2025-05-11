@@ -12,6 +12,14 @@ properties:
     description: "URL della foto del profilo"
   selfdescription:
     type: string
+  segnalazioni:
+    type: array
+    items:
+      type: object
+  annunci:
+    type: array
+    items:
+      type: object
 required:
   - email
   - nomeutente
