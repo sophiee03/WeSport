@@ -19,7 +19,7 @@ get:
                 type: array
                 items:
                   $ref: '#/components/schemas/Book'
-    post:
+post:
       description: >-
         Creates a new book in the system.
       summary: Add a new book
