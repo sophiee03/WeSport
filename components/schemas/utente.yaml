@@ -1,16 +1,1 @@
 type: object
-properties:
-  username:
-    type: string
-    example: guest
-  registered:
-    type: boolean
-    example: false
-  permissions:
-    type: array
-    items:
-      type: string
-    example: [ "read_public_content" ]
-required:
-  - username
-  - registered
