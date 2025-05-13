@@ -13,6 +13,8 @@ paths:
     $ref: './paths/annunci.yaml'
   /areesportive:
     $ref: './paths/areesportive.yaml'
+  /areesportive/searchAS:
+    $ref: './paths/areesportive/searchAS.yaml'
   /aziende:
     $ref: './paths/aziende.yaml'
   /chats:
