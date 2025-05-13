@@ -7,6 +7,9 @@ properties:
     format: email
   punti:
     type: int
+  registered:
+    type: boolean
+    example: true
   fotoprofilo:
     type: string
     description: "URL della foto del profilo"
