@@ -23,6 +23,8 @@ router.get('/', async (req, res) => {
   }
 });
 
+
+//mettiamo o no? semmai è il comune che le aggiunge no?
 router.post('/', async (req, res) => {
   try {
     const newareasportiva = new areasportiva(req.body); 
@@ -30,6 +32,35 @@ router.post('/', async (req, res) => {
     res.status(201).json(savedareasportiva); 
   } catch (err) {
     res.status(400).json({ errore: 'Errore nella creazione' });
+  }
+});
+
+/** COMMENTI SWAGGER
+ * @openapi
+ * /areasportiva/searchAS
+ *       description: Ottieni le aree sportive filtrate per categoria
+ *       parameters:
+ *       - name: type
+ *           in: query
+ *           description: Categoria dell'area sportiva (ad esempio: calcio, tennis, basket)
+ *           required: true
+ *           schema:
+ *           type: string
+ *       responses:
+ *       '200':
+ *           description: Successo - aree sportive filtrate per categoria
+ *       '400':
+ *           description: Parametro 'type' mancante
+ *       '500':
+ *           description: Errore interno
+ */
+
+router.get('/searchAS', async (req, res) => {
+  try {
+    const searchAS = await areasportiva.find();
+    res.json(searchAS); 
+  } catch (err) {
+    res.status(500).json({ errore: 'Errore nel recupero dei dati' });
   }
 });
 
