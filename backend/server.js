@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const yaml = require('js-yaml');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -13,7 +12,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Caricamento documentazione Swagger/OpenAPI
-const openapiPath = path.join(__dirname, 'WeSport.yaml'); // Assicurati che il file si trovi nella stessa directory del server.js
+const openapiPath = path.join(__dirname, '..', 'WeSport.yaml'); // Assicurati che il file si trovi nella stessa directory del server.js
 const openapiDocument = yaml.load(fs.readFileSync(openapiPath, 'utf8'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiDocument));
