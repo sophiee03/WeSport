@@ -31,6 +31,12 @@ paths:
     $ref: './paths/segnalazioni.yaml'
   /avvisi:
     $ref: './paths/avvisi.yaml'
+  /auth/login:
+    $ref: './paths/auth.yaml/auth/login'
+  /auth/logout:
+    $ref: './paths/auth.yaml/auth/logout'
+  /profileUtente:
+    $ref: './paths/utentiregistrati.yaml/profiloUtente'
 
 #------------------------------------------------------------
 
@@ -58,3 +64,7 @@ components:
       $ref: './components/schemas/segnalazione.yaml'
     avviso:
       $ref: './components/schemas/avviso.yaml'
+    LoginRequest:
+      $ref: './components/schemas/Login/LoginRequest.yaml'
+    AuthToken:
+      $ref: './components/schemas/Login/AuthToken.yaml'

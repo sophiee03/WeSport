@@ -1,0 +1,11 @@
+type: object
+properties:
+  token:
+    type: string
+    description: Token JWT per l'autenticazione
+  expiresIn:
+    type: integer
+    description: Durata del token in secondi
+required:
+  - token
+  - expiresIn
