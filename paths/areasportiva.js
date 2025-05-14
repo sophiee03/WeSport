@@ -23,6 +23,36 @@ router.get('/', async (req, res) => {
   }
 });
 
+/** COMMENTI SWAGGER
+ * @openapi
+ * /areasportiva
+ *     post:
+ *           summary: Crea una nuova area sportiva
+ *           requestBody:
+ *             required: true
+ *             content:
+ *               application/json:
+ *                 schema:
+ *                   $ref: '#/components/schemas/AreaSportiva'
+ *           responses:
+ *             '201':
+ *               description: Area sportiva creata con successo
+ *               content:
+ *                 application/json:
+ *                   schema:
+ *                     $ref: '#/components/schemas/AreaSportiva'
+ *             '400':
+ *               description: Errore nella creazione
+ *               content:
+ *                 application/json:
+ *                   schema:
+ *                     type: object
+ *                     properties:
+ *                       errore:
+ *                         type: string
+ *                         example: Errore nella creazione
+  */
+
 router.post('/', async (req, res) => {
   try {
     const newareasportiva = new areasportiva(req.body); 
