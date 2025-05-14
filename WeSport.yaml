@@ -10,12 +10,11 @@ servers:
 #------------------------------------------------------
 
 paths:
-
   /annunci:
     get:
       summary: Ottieni tutti gli annunci
       tags:
-        - Annunci
+        - annunci
       responses:
         200:
           description: Lista di annunci
@@ -24,7 +23,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Annuncio'
+                  $ref: '#/components/schemas/annuncio'
         500:
           description: Errore interno
 
@@ -37,23 +36,23 @@ paths:
         '500':
           description: Errore interno
  
-/areesportive/searchAS:
-  get:
-    description: Ottieni le aree sportive filtrate per categoria
-    parameters:
-      - name: type
-        in: query
-        description: Categoria dell'area sportiva (ad esempio: calcio, tennis, basket)
-        required: true
-        schema:
-          type: string
-    responses:
-      '200':
-        description: Successo – aree sportive filtrate per categoria
-      '400':
-        description: Parametro 'type' mancante
-      '500':
-        description: Errore interno
+  /areesportive/search:
+    get:
+      description: Ottieni le aree sportive filtrate per categoria
+      parameters:
+        - name: type
+          in: query
+          description: Categoria dell'area sportiva (ad esempio: calcio, tennis, basket)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successo aree sportive filtrate per categoria
+        '400':
+          description: Parametro 'type' mancante
+        '500':
+          description: Errore interno
 
   /azienda:
     get:
@@ -99,7 +98,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../components/schemas/Login/AuthToken.yaml'
+                $ref: '..//verifytoken.yaml'
         '401':
           description: Credenziali non valide
 
@@ -123,21 +122,21 @@ paths:
     get:
 
   /utenteregistrato/profiloUtente:
-  get:
-    summary: Ottiene il profilo utente
-    tags:
-      - Utente Registrato
-    security:
-      - bearerAuth: []
-    responses:
-      '200':
-        description: Info del profilo
-        content:
-          application/json:
-            schema:
-              $ref: '../components/schemas/utenteregistrato.yaml'
-      '401':
-        description: Utente non autorizzato
+    get:
+      summary: Ottiene il profilo utente
+      tags:
+        - Utente Registrato
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Info del profilo
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas/utenteregistrato.yaml'
+        '401':
+          description: Utente non autorizzato
 
 
 #------------------------------------------------------------
@@ -145,34 +144,45 @@ paths:
 components:
   schemas:
     annuncio:
-     type: object
-    properties:
-      idAnnuncio:
-        type: string
-      idCapogruppo:
-        type: string
-        description: "Id dell'utente che ha creato l'annuncio"
-      Npersone:
-        type: int
-      categoria:
-        type: string
-      description:
-        type: string
-      dataOrario:
-        type: date-time
-      iscritti:
-        type: array
-        items:
+      type: object
+      properties:
+        idAnnuncio:
           type: string
-        description: "ID degli utenti iscritti all'annuncio"
-      visibilita:
-        type: boolean
-    required:
-      - idAnnuncio
-      - idCapogruppo
-      - categoria
-      - Npersone
-
+        idCapogruppo:
+          type: string
+          description: "nomeutente dell'utente che ha creato l'annuncio"
+        Npersone:
+          type: int
+        categoria: 
+          type: string
+          enum:
+            - calcio
+            - basket
+            - pallavolo/beach_volley
+            - padel
+            - tennis
+            - arrampicata
+            - nuoto
+            - corsa
+            - trekking
+            - ciclismo
+        description:
+          type: string
+        dataOrario:
+          type: date-time
+        iscritti:
+          type: array
+          items:
+            type: string
+          description: "ID degli utenti iscritti all'annuncio"
+        visibilita:
+          type: boolean
+          default: true
+      required:
+        - idAnnuncio
+        - idCapogruppo
+        - categoria
+        - Npersone
 
     areasportiva:
       type: object
@@ -187,67 +197,52 @@ components:
             - Trento Centro
             - Trento Ovest
             - Trento Est
-        sport:
-          type: array
-          items:
-            type: string
-            description: sport che si possono praticare
+        categoria: 
+          type: string
+          enum:
+            - calcio
+            - basket
+            - pallavolo/beach_volley
+            - padel
+            - tennis
+            - arrampicata
+            - nuoto
         selfDescription:
           type: string
         privata:
           type: boolean
+        voti:
+          type: array
+          items:
+            type: int
+        numerovoti:
+          type: int
         recensione:
           type: int
       required:
         - nome
-        - coordinate
+        - zona
+        - categoria
         - privata
-
-
-    azienda:
-      type: object
-      properties:
-        nomeAzienda:
-          type: string
-        email: 
-          type: string
-          format: email
-        verifica:
-          type: boolean
-        fotoProfilo:
-          type: string
-          description: "URL della foto del profilo"
-        selfDescription:
-          type: string
-      required:
-        - nomeAzienda
-        - email
-        #??????????????
-        - verifica
-
 
     chat:
       type: object
       properties:
-        id:
-          type: string
-        idannuncio:
+        id:   #uguale a quello dell'annuncio
           type: string
           description: ID dell'annuncio a cui è collegata la chat
-        # da togliere? perchè lo abbiamo già nell'annuncio
-        #partecipanti:
-        #  type: array
-        #  items:
-        #    type: string
-        #  description: ID degli utenti coinvolti nella chat
+        partecipanti:
+          type: array
+            items:
+              type: string
+            description: ID degli utenti coinvolti nella chat
         messaggi:
           type: array
           items:
-            $ref: '#/components/schemas/Messaggi'
+            $ref: '#/components/schemas/messaggio'
       required:
         - id
         - idannuncio
-
 
     messaggio:
       type: object
@@ -263,7 +258,6 @@ components:
         - mittente
         - data
 
-
     percorso:
       type: object
       properties:
@@ -272,41 +266,31 @@ components:
         idcreatore:
           type: string
           description: "id dell'utente che ha creato il percorso"
-        sport: 
+        categoria: 
           type: string
+          enum:
+            - corsa
+            - trekking
+            - ciclismo
         difficolta:
           type: int
         durata:
+          type: int
+        voti:
+          type: array
+          items:
+            type: int
+        numerovoti:
           type: int
         recensione:
           type: int
         selfDescription:
           type: string
-        partenza:
-          type: string
-        arrivo: 
-          type: string
+        #MAPPA DA METTERE
       required:
         - idpercorso
         - idcreatore
-        - sport
-        - partenza
-        - arrivo
-
-
-    sport:
-      type: object
-      properties:
-        nome:
-          type: string
-        percorsi:
-            type: array
-            items:
-              type: int
-            description: ID dei percorsi relativi a quello sport
-      required:
-        - nome
-
+        - categoria
 
     utenteregistrato:
       type: object
@@ -316,8 +300,14 @@ components:
         email: 
           type: string
           format: email
+        tipo:
+          type: string
+          enum:
+            - registrato
+            - azienda     #verificata
         punti:
           type: int
+          default: 0
         fotoprofilo:
           type: string
           description: "URL della foto del profilo"
@@ -326,19 +316,17 @@ components:
         segnalazioni:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/segnalazione'
         annunci:
           type: array
           items:
-            type: object
+            $ref: '#/components/schemas/annuncio'
       required:
         - email
         - nomeutente
-  
 
     utente:
       type: object
-
 
     segnalazione:
       type: object
@@ -365,9 +353,7 @@ components:
         - idsegnalazione
         - data
         - idcreatore
-        #?????
         - foto
-    
     
     avviso:
       type: object
@@ -397,8 +383,7 @@ components:
         - data
         - categoria
     
-    
-    Login/LoginRequest:
+    LoginRequest:
       type: object
       properties:
         token:
@@ -407,8 +392,7 @@ components:
       required:
         - token
 
-
-    Login/AuthToken:
+    verifytoken:
       type: object
       properties:
         token:
