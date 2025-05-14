@@ -5,8 +5,14 @@ properties:
   email: 
     type: string
     format: email
+  tipo:
+    type: string
+    default: 'registrato'
   punti:
     type: int
+  registered:
+    type: boolean
+    example: true
   fotoprofilo:
     type: string
     description: "URL della foto del profilo"
