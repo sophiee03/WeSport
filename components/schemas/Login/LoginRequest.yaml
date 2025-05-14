@@ -1,7 +1,0 @@
-type: object
-properties:
-  token:
-    type: string
-    description: Token fornito dal provider di identità (es. Google)
-required:
-  - token

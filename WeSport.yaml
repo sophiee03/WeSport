@@ -2,71 +2,423 @@ openapi: 3.0.3
 info:
   title: API WeSport
   version: 1.0.0
+  description: API per la gestione del servizio.
 
-servers:
+servers:  
   - url: https://api.weSport.it/v1
 
 #------------------------------------------------------
 
 paths:
+
   /annunci:
-    $ref: './paths/annunci.yaml'
+    get:
+      summary: Ottieni tutti gli annunci
+      tags:
+        - Annunci
+      responses:
+        200:
+          description: Lista di annunci
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annuncio'
+        500:
+          description: Errore interno
+
   /areesportive:
-    $ref: './paths/areesportive.yaml'
-  /areesportive/searchAS:
-    $ref: './paths/areesportive/searchAS.yaml'
-  /aziende:
-    $ref: './paths/aziende.yaml'
-  /chats:
-    $ref: './paths/chats.yaml'
-  /messaggi:
-    $ref: './paths/messaggi.yaml'
-  /percorsi:
-    $ref: './paths/percorsi.yaml'
-  /sports:
-    $ref: './paths/sports.yaml'
-  /utentiregistrati:
-    $ref: './paths/utentiregistrati.yaml'
-  /utenti:
-    $ref: './paths/utenti.yaml'
-  /segnalazioni:
-    $ref: './paths/segnalazioni.yaml'
-  /avvisi:
-    $ref: './paths/avvisi.yaml'
+    get:
+      description: Ottieni tutte le strutture sportive
+      responses:
+        '200':
+          description: Successo
+        '500':
+          description: Errore interno
+ 
+/areesportive/searchAS:
+  get:
+    description: Ottieni le aree sportive filtrate per categoria
+    parameters:
+      - name: type
+        in: query
+        description: Categoria dell'area sportiva (ad esempio: calcio, tennis, basket)
+        required: true
+        schema:
+          type: string
+    responses:
+      '200':
+        description: Successo – aree sportive filtrate per categoria
+      '400':
+        description: Parametro 'type' mancante
+      '500':
+        description: Errore interno
+
+  /azienda:
+    get:
+
+  /chat:
+    get:
+
+  /messaggio:
+    get:
+
+  /percorso:
+    get:
+
+  /sport:
+    get:
+  
+  /segnalazione:
+    get:
+
+  /avviso:
+    get:
+      description: Ottieni tutti gli avvisi
+      responses:
+        '200':
+          description: Successo
+        '500':
+          description: Errore interno
+
   /auth/login:
-    $ref: './paths/auth.yaml/auth/login'
+    post:
+      summary: Login utente tramite ID provider
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/Login/LoginRequest.yaml'
+      responses:
+        '200':
+          description: Login riuscito
+          content:
+            application/json:
+              schema:
+                $ref: '../components/schemas/Login/AuthToken.yaml'
+        '401':
+          description: Credenziali non valide
+
   /auth/logout:
-    $ref: './paths/auth.yaml/auth/logout'
-  /profileUtente:
-    $ref: './paths/utentiregistrati.yaml/profiloUtente'
+    post:
+      summary: Logout dell'utente
+      tags:
+        - Auth
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Logout effettuato con successo
+        '401':
+          description: Utente non autorizzato
+  
+  /utenti:
+    get:
+
+  /utenteregistrato:
+    get:
+
+  /utenteregistrato/profiloUtente:
+  get:
+    summary: Ottiene il profilo utente
+    tags:
+      - Utente Registrato
+    security:
+      - bearerAuth: []
+    responses:
+      '200':
+        description: Info del profilo
+        content:
+          application/json:
+            schema:
+              $ref: '../components/schemas/utenteregistrato.yaml'
+      '401':
+        description: Utente non autorizzato
+
 
 #------------------------------------------------------------
 
 components:
   schemas:
     annuncio:
-      $ref: './components/schemas/annuncio.yaml'
+     type: object
+    properties:
+      idAnnuncio:
+        type: string
+      idCapogruppo:
+        type: string
+        description: "Id dell'utente che ha creato l'annuncio"
+      Npersone:
+        type: int
+      categoria:
+        type: string
+      description:
+        type: string
+      dataOrario:
+        type: date-time
+      iscritti:
+        type: array
+        items:
+          type: string
+        description: "ID degli utenti iscritti all'annuncio"
+      visibilita:
+        type: boolean
+    required:
+      - idAnnuncio
+      - idCapogruppo
+      - categoria
+      - Npersone
+
+
     areasportiva:
-      $ref: './components/schemas/areasportiva.yaml'
+      type: object
+      properties:
+        nome:
+          type: string
+        zona:
+          type: string
+          enum:
+            - Trento Nord
+            - Trento Sud
+            - Trento Centro
+            - Trento Ovest
+            - Trento Est
+        sport:
+          type: array
+          items:
+            type: string
+            description: sport che si possono praticare
+        selfDescription:
+          type: string
+        privata:
+          type: boolean
+        recensione:
+          type: int
+      required:
+        - nome
+        - coordinate
+        - privata
+
+
     azienda:
-      $ref: './components/schemas/azienda.yaml'
+      type: object
+      properties:
+        nomeAzienda:
+          type: string
+        email: 
+          type: string
+          format: email
+        verifica:
+          type: boolean
+        fotoProfilo:
+          type: string
+          description: "URL della foto del profilo"
+        selfDescription:
+          type: string
+      required:
+        - nomeAzienda
+        - email
+        #??????????????
+        - verifica
+
+
     chat:
-      $ref: './components/schemas/chat.yaml'
+      type: object
+      properties:
+        id:
+          type: string
+        idannuncio:
+          type: string
+          description: ID dell'annuncio a cui è collegata la chat
+        # da togliere? perchè lo abbiamo già nell'annuncio
+        #partecipanti:
+        #  type: array
+        #  items:
+        #    type: string
+        #  description: ID degli utenti coinvolti nella chat
+        messaggi:
+          type: array
+          items:
+            $ref: '#/components/schemas/Messaggi'
+      required:
+        - id
+        - idannuncio
+
+
     messaggio:
-      $ref: './components/schemas/messaggio.yaml'
+      type: object
+      properties:
+        data:
+          type: date
+        mittente:
+          type: string
+          description: "id dell'utente che ha inviato il messaggio"
+        testo: 
+          type: string
+      required:
+        - mittente
+        - data
+
+
     percorso:
-      $ref: './components/schemas/percorso.yaml'
+      type: object
+      properties:
+        idpercorso:
+          type: int
+        idcreatore:
+          type: string
+          description: "id dell'utente che ha creato il percorso"
+        sport: 
+          type: string
+        difficolta:
+          type: int
+        durata:
+          type: int
+        recensione:
+          type: int
+        selfDescription:
+          type: string
+        partenza:
+          type: string
+        arrivo: 
+          type: string
+      required:
+        - idpercorso
+        - idcreatore
+        - sport
+        - partenza
+        - arrivo
+
+
     sport:
-      $ref: './components/schemas/sport.yaml'
+      type: object
+      properties:
+        nome:
+          type: string
+        percorsi:
+            type: array
+            items:
+              type: int
+            description: ID dei percorsi relativi a quello sport
+      required:
+        - nome
+
+
     utenteregistrato:
-      $ref: './components/schemas/utenteregistrato.yaml'
+      type: object
+      properties:
+        nomeutente:
+          type: string
+        email: 
+          type: string
+          format: email
+        punti:
+          type: int
+        fotoprofilo:
+          type: string
+          description: "URL della foto del profilo"
+        selfdescription:
+          type: string
+        segnalazioni:
+          type: array
+          items:
+            type: object
+        annunci:
+          type: array
+          items:
+            type: object
+      required:
+        - email
+        - nomeutente
+  
+
     utente:
-      $ref: './components/schemas/utente.yaml'
+      type: object
+
+
     segnalazione:
-      $ref: './components/schemas/segnalazione.yaml'
+      type: object
+      properties:
+        idsegnalazione:
+          type: int
+        data:
+          type: date
+        descrizione:
+          type: string
+        idcreatore:
+          type: string
+          description: 'id utente che ha creato la segnalazione'
+        foto:
+          type: string
+          description: 'url della foto importata/scattata'
+        stato:
+          type: string
+          enum:
+            - accettata
+            - elaborazione
+            - rifiutata
+      required:
+        - idsegnalazione
+        - data
+        - idcreatore
+        #?????
+        - foto
+    
+    
     avviso:
-      $ref: './components/schemas/avviso.yaml'
-    LoginRequest:
-      $ref: './components/schemas/Login/LoginRequest.yaml'
-    AuthToken:
-      $ref: './components/schemas/Login/AuthToken.yaml'
+      type: object
+      properties:
+        idavviso:
+          type: int
+        data:
+          type: date
+        categoria:
+          type: string
+          enum:
+            - evento
+            - chiusura/manutenzione
+            - festival
+        stato:
+          type: string
+          enum:
+            - in_corso
+            - annullato
+            - rimandato
+            - concluso
+            - coming soon
+        testo: 
+          type: string
+      required:
+        - idavviso 
+        - data
+        - categoria
+    
+    
+    Login/LoginRequest:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token fornito dal provider di identità (es. Google)
+      required:
+        - token
+
+
+    Login/AuthToken:
+      type: object
+      properties:
+        token:
+          type: string
+          description: Token JWT per l'autenticazione
+        expiresIn:
+          type: integer
+          description: Durata del token in secondi
+      required:
+        - token
+        - expiresIn
+
+        
