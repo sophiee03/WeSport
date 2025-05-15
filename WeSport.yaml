@@ -31,113 +31,451 @@ paths:
       summary: Crea un nuovo annuncio (utente registrato)
       tags:
         - annunci
-        ######################################
-      response:
-
-  /areesportive:
-    get:
-      summary: Ottieni tutte le strutture sportive
-      tags:
-        - areesportive
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/annuncio'
       responses:
-        '200':
-          description: Successo
-        '500':
-          description: Errore interno
-    
-  /areesportive/filtered:
+        '201':
+          description: Annuncio creato con successo
+        '400':
+          description: Dati non validi
+        '401':
+          description: Autenticazione richiesta
+  /annunci/{idAnnuncio}:
     get:
-      summary: Ottieni le aree sportive filtrate per visualizzazioni recenti (utente registrato)
-      tags:
-        - areesportive
-        ###################################
- 
-  /areesportive/search:
-    get:
-      summary: Ottieni le aree sportive filtrate per categoria
-      tags:
-        - areesportive
+      summary: Recupera un annuncio specifico
       parameters:
-        - name: categoria
-          in: query
-          description: Categoria dell'area sportiva (ad esempio calcio, tennis, basket)
+        - name: idAnnuncio
+          in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: Successo aree sportive filtrate per categoria
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/annuncio'
+        '404':
+          description: Annuncio non trovato
+    delete:
+      summary: Eliminazione di un annuncio (solo utente registrato che l'ha creato)
+      tags:
+        - annunci
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Annuncio eliminato con successo
+        '401':
+          description: Non autenticato
+        '403':
+          description: Accesso negato - non sei il creatore dell'annuncio
+        '404':
+          description: Annuncio non trovato
+    put:
+      summary: Modificare un annuncio esistente (solo utente registrato che l'ha creato)
+      tags:
+        - annunci
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/annuncio'
+      responses:
+        '200':
+          description: Annuncio aggiornato con successo
         '400':
-          description: Parametro 'categoria' mancante
+          description: Dati non validi
+        '401':
+          description: Non autenticato
+        '403':
+          description: Non autorizzato - solo il creatore può modificare
+        '404':
+          description: Annuncio non trovato
+  
+  /annunci/{idAnnuncio}/chat:
+    get:
+      summary: Ottieni le informazioni della chat (utente registrato iscritto a quell'annuncio)
+      tags:
+          - annunci
+    security:
+      - bearerAuth: []   # richiede autenticazione JWT
+    parameters:
+      - name: idAnnuncio
+        in: path
+        required: true
+        schema:
+          type: string
+        description: ID dell'annuncio di cui vuoi ottenere la chat
+    responses:
+      '200':
+        description: Informazioni della chat recuperate con successo
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/chat'
+      '401':
+        description: Non autenticato - token mancante o non valido
+      '403':
+        description: Accesso negato - utente non autorizzato a vedere questa chat
+      '404':
+        description: Chat o annuncio non trovato
+
+  /annunci/{idAnnuncio}/chat/{idchat}/messaggi:
+    get:
+      summary: Ottieni i messaggi scritti nella chat (utente registrato iscritto all'annuncio)
+      tags:
+          - annunci
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID dell'annuncio
+        - name: idChat
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID della chat
+      responses:
+        '200':
+          description: Lista dei messaggi della chat
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/messaggio'
+        '401':
+          description: Non autenticato
+        '403':
+          description: Accesso negato - utente non iscritto all'annuncio o non autorizzato
+        '404':
+          description: Annuncio, chat o messaggi non trovati
+  /annuncio/{idAnnuncio}/iscritti:    #?????? è corretto? o devo mettere utenteregistrato?
+    get:
+      summary: Ottieni gli utenti iscritti a un annuncio (utente registrato)
+      tags:
+        - annunci
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista di utenti iscritti all'annuncio
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/utenteregistrato'
+        '401':
+          description: Non autenticato
+        '404':
+          description: Annuncio non trovato
+    post:
+      summary: Iscriversi all'annuncio (utente registrato)
+      tags:
+        - annunci
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Iscrizione avvenuta con successo
+        '400':
+          description: Utente già iscritto o richiesta malformata
+        '401':
+          description: Non autenticato
+        '404':
+          description: Annuncio non trovato
+    delete:
+      summary: Disiscrivi l'utente dall'annuncio (utente registrato)
+      tags:
+        - annunci
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: idAnnuncio
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Disiscrizione avvenuta con successo
+        '401':
+          description: Utente non autenticato
+        '403':
+          description: Accesso negato (non iscritto o non autorizzato)
+        '404':
+          description: Annuncio non trovato
+
+  /sport/{sport}/areesportive:
+    get:
+      summary: Ottieni tutte le strutture sportive per una determinata categoria
+      description: >-
+        di default filtra le aree sportive per categoria, si possono filtrare ulteriormente 
+        per zona una volta entrati nella categoria di quello sport
+      tags:
+        - sport
+      parameters:
+        - name: categoria
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/sport'
+        - name: zona
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Trento Nord, Trento Sud, Trento Centro, Trento Ovest, Trento Est]
+      responses:
+        '200':
+          description: "Lista di aree sportive per lo sport specificato"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/areasportiva
         '500':
           description: Errore interno
 
-  /chat:
+  /sport/{sport}/annuncio:
     get:
-      summary: Ottieni le informazioni della chat (utente registrato)
+      summary: Visualizza gli annunci per il relativo sport
       tags:
-          - annunci
-      ###############################
+        - annunci
+      parameters:
+        - name: sport
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/sport'
+      responses:
+        '200':
+          description: "Lista di annunci per lo sport specificato"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/annunci
 
-  /messaggio:
+  /sport/{sport}/percorso:
     get:
-      summary: Ottieni i messaggi scritti nella chat (utente registrato)
+      summary: Visualizza i percorsi per il relativo sport
       tags:
-          - annunci
-      ###############################
-
-  /percorso:
-    get:
-      summary: Ottieni i percorsi per la relativa area sportiva
-      tags:
-        - percorsi
-      ################################
-    
+        - sport
+      parameters:
+        - name: sport
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/sport'
+      responses:
+        '200':
+          description: "Lista di percorsi per lo sport specificato"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/percorso'
     post:
-      summary: Consiglia un percorso (utente registrato)
+      summary: Consigliare un percorso (utente registrato)
       tags:
-        - percorsi
-      #################################
+        - sport
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/percorso'
+      responses:
+        '201':
+          description: Percorso creato con successo
+        '400':
+          description: Dati non validi
+        '401':
+          description: Autenticazione richiesta
 
-  /percorso/{:id}:
+  /sport/{sport}/percorso/{idpercorso}:
     get:
-      summary: Ottieni i percorsi che ha consigliato l'utente (utente registrato)
-      tags:
-          - percorsi
-      #################################
-  
-  /segnalazione/{:id}:
-    get:
-      summary: Ottieni le segnalazioni che ha effettuato l'utente (utente registrato)
-      tags:
-        - segnalazioni
-      #################################
-
-  /segnalazione:
-    post:
-      summary: Crea una segnalazione (utente registrato)
-      tags:
-        - segnalazioni
-      #############################
-
-  /avviso:
-    get:
-      summary: Ottieni tutti gli avvisi pubblicati
-      tags:
-        - avvisi
+      summary: Visualizzare informazioni di un percorso specifico
+      parameters:
+        - name: idPercorso
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/percorso'
+        '404':
+          description: Percorso non trovato
+    put:
+      summary: Modificare un percorso esistente (solo utente registrato che l'ha creato)
+      tags:
+        - sport
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: idPercorso
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/percorso'
+      responses:
+        '200':
+          description: Percorso aggiornato con successo
+        '400':
+          description: Dati non validi
+        '401':
+          description: Non autenticato
+        '403':
+          description: Non autorizzato - solo il creatore può modificare
+        '404':
+          description: Annuncio non trovato
+    delete:
+      summary: Eliminazione di un percorso (solo utente registrato che l'ha creato)
+      tags:
+        - sport
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: idPercorso
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Percorso eliminato con successo
+        '401':
+          description: Non autenticato
+        '403':
+          description: Accesso negato - non sei il creatore del percorso
+        '404':
+          description: Annuncio non trovato
+
+  /avviso:
+    get:
+      summary: Ottieni tutti gli avvisi pubblicati con possibilità di filtrare per tipo
+      tags:
+        - avvisi
+      parameters:
+        - name: categoria
+          in: query
+          required: false
+          description: "Filtra gli avvisi per categoria (es. evento)"
+          schema:
+            type: string
+            enum:
+              - evento
+              - chiusura/manutenzione
+              - festival
+      responses:
+        '200':
+          description: "Lista di avvisi"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/avviso'
         '500':
           description: Errore interno
-
-  /avviso/richiesta:
     post:
       summary: Richiedi la pubblicazione di un avviso (azienda verificata)
       tags:
         - avvisi
-        ####################################
-
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/avviso'
+      responses:
+        '201':
+          description: "Richiesta per avviso creata con successo"
+        '403':
+          description: "Accesso negato: solo le aziende verificate possono fare richiesta"
+      
+  
+  /avviso/{idAvviso}:
+    get:
+      summary: Visualizzare i dettagli di un avviso specifico
+      tags:
+      - avvisi
+      parameters:
+        - name: idAvviso
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/avviso'
+        '404':
+          description: Avviso non trovato
+###########
   /auth/login:
     post:
       summary: Login utente tramite ID provider 
@@ -171,10 +509,11 @@ paths:
           description: Logout effettuato con successo
         '401':
           description: Utente non autorizzato
-
-  /utenteregistrato/profiloUtente:
+############
+  
+  /utenteregistrato/{nomeutente}:
     get:
-      summary: Ottiene il profilo utente (utente registrato)
+      summary: Ottiene le informazioni dell'utente (utente registrato)
       tags:
         - gestioneutenti
       security:
@@ -185,31 +524,131 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../components/schemas/utenteregistrato.yaml'
+                $ref: '../components/schemas/utenteregistrato'
         '401':
           description: Utente non autorizzato
-  
-  /utenteregistrato/profiloUtente/impostazioni:
-    get:
-      summary: Ottiene le impostazioni del profilo utente (utente registrato)
+    delete:
+      summary: Eliminazione di un utente (utente registrato)
       tags:
         - gestioneutenti
       security:
-        - bearerAuth: []
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: nomeutente
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Utente eliminato con successo
+        '401':
+          description: Non autenticato
+        '403':
+          description: Accesso negato
+        '404':
+          description: Utente non trovato
+    put:
+      summary: Modificare le informazioni di un utente (utente registrato)
+      tags:
+        - gestioneutenti
+      security:
+        - bearerAuth: []  # Richiede autenticazione con JWT
+      parameters:
+        - name: nomeutente
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/utenteregistrato'
       responses:
         '200':
-          description: Impostazioni
+          description: Profilo aggiornato con successo
+        '400':
+          description: Dati non validi
+        '401':
+          description: Non autenticato
+        '403':
+          description: Non autorizzato
+        '404':
+          description: Utente non trovato
+    
+  
+  /utenteregistrato/{nomeutente}/annuncio:
+    get:
+      summary: Visualizza gli annunci pubblicati dall'utente (utente registrato)
+      tags:
+        - gestioneutenti
+      parameters:
+        - name: nomeutente
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Lista di annunci pubblicati dall'utente"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/utenteregistrato'
+                type: array
+                items:
+                  $ref: '#/components/schemas/annuncio'
+ 
+  /utenteregistrato/{nomeutente}/segnalazione:
+    get:
+      summary: Visualizza le segnalazioni pubblicate dall'utente (utente registrato)
+      tags:
+        - segnalazioni
+      parameters:
+        - name: nomeutente
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Lista di segnalazioni pubblicate dall'utente"
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/segnalazione'
+    post:
+      summary: Effettua una segnalazione (utente registrato)
+      tags:
+        - segnalazioni
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/segnalazione'
+      responses:
+        '201':
+          description: Segnalazione effettuata con successo
+        '400':
+          description: Dati non validi
         '401':
-          description: Utente non autorizzato
-
+          description: Autenticazione richiesta
+                  
 #------------------------------------------------------------
 
 components:
   schemas:
+    securitySchemes:
+      bearerAuth:
+        type: http
+        scheme: bearer
+        bearerFormat: JWT
     annuncio:
       type: object
       properties:
@@ -221,18 +660,7 @@ components:
         Npersone:
           type: int
         categoria: 
-          type: string
-          enum:
-            - calcio
-            - basket
-            - pallavolo/beach_volley
-            - padel
-            - tennis
-            - arrampicata
-            - nuoto
-            - corsa
-            - trekking
-            - ciclismo
+          $ref: '#/components/schemas/sport'
         description:
           type: string
         dataOrario:
@@ -264,16 +692,10 @@ components:
             - Trento Centro
             - Trento Ovest
             - Trento Est
-        categoria: 
-          type: string
-          enum:
-            - calcio
-            - basket
-            - pallavolo/beach_volley
-            - padel
-            - tennis
-            - arrampicata
-            - nuoto
+        categoria:
+          type: array
+          items:
+            $ref: '#/components/schema/sport'
         selfDescription:
           type: string
         privata:
@@ -292,10 +714,24 @@ components:
         - categoria
         - privata
 
+    sport:
+      type: string
+      enum:
+        - calcio
+        - basket
+        - tennis
+        - padel
+        - corsa
+        - trekking
+        - ciclismo
+        - pallavolo/beach_volley
+        - nuoto
+        - arrampicata
+
     chat:
       type: object
       properties:
-        id:   #uguale a quello dell'annuncio
+        idChat:
           type: string
           description: ID dell'annuncio a cui è collegata la chat
         partecipanti:
@@ -328,7 +764,7 @@ components:
     percorso:
       type: object
       properties:
-        idpercorso:
+        idPercorso:
           type: int
         idcreatore:
           type: string
@@ -398,13 +834,13 @@ components:
     segnalazione:
       type: object
       properties:
-        idsegnalazione:
+        idSegnalazione:
           type: int
         data:
           type: date
         descrizione:
           type: string
-        idcreatore:
+        idCreatore:
           type: string
           description: 'id utente che ha creato la segnalazione'
         foto:
@@ -425,7 +861,7 @@ components:
     avviso:
       type: object
       properties:
-        idavviso:
+        idAvviso:
           type: int
         data:
           type: date
