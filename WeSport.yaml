@@ -27,22 +27,40 @@ paths:
         500:
           description: Errore interno
 
+    post:
+      summary: Crea un nuovo annuncio (utente registrato)
+      tags:
+        - annunci
+        ######################################
+      response:
+
   /areesportive:
     get:
-      description: Ottieni tutte le strutture sportive
+      summary: Ottieni tutte le strutture sportive
+      tags:
+        - areesportive
       responses:
         '200':
           description: Successo
         '500':
           description: Errore interno
+    
+  /areesportive/filtered:
+    get:
+      summary: Ottieni le aree sportive filtrate per visualizzazioni recenti (utente registrato)
+      tags:
+        - areesportive
+        ###################################
  
   /areesportive/search:
     get:
-      description: Ottieni le aree sportive filtrate per categoria
+      summary: Ottieni le aree sportive filtrate per categoria
+      tags:
+        - areesportive
       parameters:
-        - name: type
+        - name: categoria
           in: query
-          description: Categoria dell'area sportiva (ad esempio: calcio, tennis, basket)
+          description: Categoria dell'area sportiva (ad esempio calcio, tennis, basket)
           required: true
           schema:
             type: string
@@ -50,42 +68,81 @@ paths:
         '200':
           description: Successo aree sportive filtrate per categoria
         '400':
-          description: Parametro 'type' mancante
+          description: Parametro 'categoria' mancante
         '500':
           description: Errore interno
 
-  /azienda:
-    get:
-
   /chat:
     get:
+      summary: Ottieni le informazioni della chat (utente registrato)
+      tags:
+          - annunci
+      ###############################
 
   /messaggio:
     get:
+      summary: Ottieni i messaggi scritti nella chat (utente registrato)
+      tags:
+          - annunci
+      ###############################
 
   /percorso:
     get:
+      summary: Ottieni i percorsi per la relativa area sportiva
+      tags:
+        - percorsi
+      ################################
+    
+    post:
+      summary: Consiglia un percorso (utente registrato)
+      tags:
+        - percorsi
+      #################################
 
-  /sport:
+  /percorso/{:id}:
     get:
+      summary: Ottieni i percorsi che ha consigliato l'utente (utente registrato)
+      tags:
+          - percorsi
+      #################################
   
-  /segnalazione:
+  /segnalazione/{:id}:
     get:
+      summary: Ottieni le segnalazioni che ha effettuato l'utente (utente registrato)
+      tags:
+        - segnalazioni
+      #################################
+
+  /segnalazione:
+    post:
+      summary: Crea una segnalazione (utente registrato)
+      tags:
+        - segnalazioni
+      #############################
 
   /avviso:
     get:
-      description: Ottieni tutti gli avvisi
+      summary: Ottieni tutti gli avvisi pubblicati
+      tags:
+        - avvisi
       responses:
         '200':
           description: Successo
         '500':
           description: Errore interno
 
+  /avviso/richiesta:
+    post:
+      summary: Richiedi la pubblicazione di un avviso (azienda verificata)
+      tags:
+        - avvisi
+        ####################################
+
   /auth/login:
     post:
-      summary: Login utente tramite ID provider
+      summary: Login utente tramite ID provider 
       tags:
-        - Auth
+        - autenticazione
       requestBody:
         required: true
         content:
@@ -104,9 +161,9 @@ paths:
 
   /auth/logout:
     post:
-      summary: Logout dell'utente
+      summary: Logout dell'utente (utente registrato)
       tags:
-        - Auth
+        - autenticazione
       security:
         - bearerAuth: []
       responses:
@@ -114,18 +171,12 @@ paths:
           description: Logout effettuato con successo
         '401':
           description: Utente non autorizzato
-  
-  /utenti:
-    get:
-
-  /utenteregistrato:
-    get:
 
   /utenteregistrato/profiloUtente:
     get:
-      summary: Ottiene il profilo utente
+      summary: Ottiene il profilo utente (utente registrato)
       tags:
-        - Utente Registrato
+        - gestioneutenti
       security:
         - bearerAuth: []
       responses:
@@ -137,7 +188,23 @@ paths:
                 $ref: '../components/schemas/utenteregistrato.yaml'
         '401':
           description: Utente non autorizzato
-
+  
+  /utenteregistrato/profiloUtente/impostazioni:
+    get:
+      summary: Ottiene le impostazioni del profilo utente (utente registrato)
+      tags:
+        - gestioneutenti
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Impostazioni
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/utenteregistrato'
+        '401':
+          description: Utente non autorizzato
 
 #------------------------------------------------------------
 
