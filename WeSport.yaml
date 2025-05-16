@@ -813,7 +813,8 @@ components:
           type: string
           enum:
             - registrato
-            - azienda     #verificata
+            - azienda    
+            - aziendaVer  #verificata
         punti:
           type: integer
           default: 0
@@ -833,6 +834,7 @@ components:
       required:
         - email
         - nomeutente
+        - tipo
 
     utente:
       type: object
