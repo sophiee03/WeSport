@@ -1,13 +1,46 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/utenteregistrato.yaml', 'utf8'));
 
-// Crea lo schema Mongoose usando i dati YAML
-const utenteregistratoSchema = new mongoose.Schema(schemaData);
+const utenteregistratoSchema = new mongoose.Schema({
+  nomeutente: { 
+    type: String, 
+    unique: true 
+    },
 
-const utenteregistrato = mongoose.model('utenteregistrato', utenteregistratoSchema);
+  email: {
+    type: String,
+    required: true,
+    unique: true 
+  },
 
-module.exports = utenteregistrato;
+  tipo: {
+    type: String,
+    enum: ['registrato', 'azienda', 'aziendaVer'], // <-- valori permessi
+    required: true
+  },
+
+  punti: {
+    type: int,
+    default: 0,
+  },
+
+  fotoprofilo: {
+    type: String,
+    description: "URL della foto del profilo"
+  },
+
+  selfdescription: String,
+
+  segnalazioni: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Segnalazione'
+  },
+
+  annunci: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Annuncio'
+  }
+});
+
+const UtenteRegistrato = mongoose.model('UtenteRegistrato', utenteregistratoSchema, 'utenteregistrato');
+module.exports = UtenteRegistrato;
