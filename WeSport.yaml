@@ -178,6 +178,8 @@ paths:
           description: Accesso negato - utente non iscritto all'annuncio o non autorizzato
         '404':
           description: Annuncio, chat o messaggi non trovati
+
+
   /annuncio/{idAnnuncio}/iscritti:    #?????? è corretto? o devo mettere utenteregistrato?
     get:
       summary: Ottieni gli utenti iscritti a un annuncio (utente registrato)
@@ -649,6 +651,7 @@ components:
         type: http
         scheme: bearer
         bearerFormat: JWT
+
     annuncio:
       type: object
       properties:
@@ -715,18 +718,19 @@ components:
         - privata
 
     sport:
-      type: string
-      enum:
-        - calcio
-        - basket
-        - tennis
-        - padel
-        - corsa
-        - trekking
-        - ciclismo
-        - pallavolo/beach_volley
-        - nuoto
-        - arrampicata
+      tipi:
+        type: string
+        enum:
+          - calcio
+          - basket
+          - tennis
+          - padel
+          - corsa
+          - trekking
+          - ciclismo
+          - pallavolo/beach_volley
+          - nuoto
+          - arrampicata
 
     chat:
       type: object
@@ -736,8 +740,8 @@ components:
           description: ID dell'annuncio a cui è collegata la chat
         partecipanti:
           type: array
-            items:
-              type: string
+          items:
+            type: string
             description: ID degli utenti coinvolti nella chat
         messaggi:
           type: array
@@ -885,15 +889,6 @@ components:
         - idavviso 
         - data
         - categoria
-    
-    LoginRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          description: Token fornito dal provider di identità (es. Google)
-      required:
-        - token
 
     verifytoken:
       type: object

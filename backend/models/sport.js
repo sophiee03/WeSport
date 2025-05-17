@@ -1,13 +1,15 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/sport.yaml', 'utf8'));
+const sportSchema = new mongoose.Schema({
 
-// Crea lo schema Mongoose usando i dati YAML
-const sportSchema = new mongoose.Schema(schemaData);
+    tipi: {
+        type: string,
+        enum: ['calcio', 'basket', 'tennis', 'padel', 'corsa', 'trekking', 'ciclismo', 'pallavolo/beach volley', 'nuoto', 'arrampicata']
+    }
 
-const sport = mongoose.model('sport', sportSchema);
+    
 
+});
+
+const Sport = mongoose.model('Sport', sportSchema);
 module.exports = sport;

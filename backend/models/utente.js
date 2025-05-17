@@ -1,7 +1,14 @@
 const mongoose = require('mongoose');
 
 const utenteSchema = new mongoose.Schema({
-  createdAt: { type: Date, default: Date.now }
+  
+  createdAt: { 
+    type: Date,
+    default: Date.now 
+  }
+
 });
 
-module.exports = mongoose.model('User', userSchema);
+const Utente = mongoose.model('Utente', utenteSchema);
+
+module.exports = Utente;;
