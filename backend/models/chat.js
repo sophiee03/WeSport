@@ -1,13 +1,26 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/chat.yaml', 'utf8'));
+const chatSchema = new mongoose.Schema({
 
-// Crea lo schema Mongoose usando i dati YAML
-const chatSchema = new mongoose.Schema(schemaData);
+    annuncioId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Annuncio',
+        required: true,
+        unique: true
+    },
 
-const chat = mongoose.model('chat', chatSchema);
+    partecipanti: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UtenteRegistrato'
+    }],
+    
+    messaggi: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Messaggio'
+    }]
+        
 
-module.exports = chat;
+});
+
+const Chat = mongoose.model('Chat', chatSchema);
+module.exports = Chat;

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/*const mongoose = require('mongoose');
 const fs = require('fs');
 const yaml = require('js-yaml');
 
@@ -11,3 +11,4 @@ const aziendaSchema = new mongoose.Schema(schemaData);
 const azienda = mongoose.model('azienda', aziendaSchema);
 
 module.exports = azienda;
+*/
