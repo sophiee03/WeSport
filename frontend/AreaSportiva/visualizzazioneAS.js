@@ -31,7 +31,7 @@ export default function CercaAreeSportive() {
   }, [query, tipoFiltro]);
 
   const filtra = () => {
-    let filtrati = dbAreeS.filter((a) =>
+    let filtrati = datiDB.filter((a) =>
       a.nome.toLowerCase().includes(query.toLowerCase()) ||
       a.sport.toLowerCase().includes(query.toLowerCase())
     );
