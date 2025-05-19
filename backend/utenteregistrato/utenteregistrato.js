@@ -65,4 +65,16 @@ router.get('/profiloutente/punti', async (req, res) => {
   }
 });
 
+//Endpoint che permette all'utente di visualizzare gli annunci da lui fatti
+router.get('/nomeutente/annunci', async (req, res) => {
+  try {
+    const annunciUtente = await Annuncio.find({idCapogruppo: req.params.nomeutente});
+    res.json(annunciUtente); 
+  } catch (err) {
+    console.error("Errore nel recuperare gli annunci:", err);
+    res.status(500).json({ success: false, message: 'Errore nel recupero dei dati' });
+  }
+});
+
+
 module.exports = router;
