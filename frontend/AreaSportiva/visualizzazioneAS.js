@@ -24,11 +24,11 @@ export default function CercaAreeSportive() {
   const [datiDB, setDatiDB] = useState([]);
   const [query, setQuery] = useState('');
   const [tipoFiltro, setTipoFiltro] = useState('Tutti');
-  const [risultati, setRisultati] = useState(areeSportiveMock);
+  const [risultati, setRisultati] = useState([]);
 
   useEffect(() => {
     filtra();
-  }, [query, tipoFiltro]);
+  }, [query, tipoFiltro, datiDB]);
 
   const filtra = () => {
     let filtrati = datiDB.filter((a) =>
