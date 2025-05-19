@@ -122,4 +122,27 @@ router.delete('/:idAnnuncio/iscritti', authMiddleware, async (req, res) => {
   }
 });
 
+// DELETE /annuncio/:idAnnuncio/iscritti - disiscrivi utente dall'annuncio
+router.delete('/:idAnnuncio/iscritti', authMiddleware, async (req, res) => {
+  try {
+    const userId = req.user.id; // prendi l'ID dell'utente dal token JWT
+    const annuncio = await Annuncio.findById(req.params.idAnnuncio);
+    if (!annuncio) return res.status(404).json({ message: 'Annuncio non trovato' });
+
+    // Controlla se l'utente è iscritto
+    if (!annuncio.members.includes(userId)) {
+      return res.status(403).json({ message: 'Non sei iscritto a questo annuncio' });
+    }
+
+    // Rimuovi l'utente dalla lista membri
+    annuncio.members = annuncio.members.filter(id => id.toString() !== userId);
+    await annuncio.save();
+
+    res.status(200).json({ message: 'Disiscrizione avvenuta con successo' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Errore interno del server' });
+  }
+});
+
 module.exports = router;
