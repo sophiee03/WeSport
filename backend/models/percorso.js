@@ -1,13 +1,38 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/percorso.yaml', 'utf8'));
+const percorsoSchema = new mongoose.Schema({
+    idPercorso: {
+        type: int,
+        required: true
+    },
 
-// Crea lo schema Mongoose usando i dati YAML
-const percorsoSchema = new mongoose.Schema(schemaData);
+    idCreatore: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UtenteRegistrato',
+        required: true,
+        description: "id dell'utente che ha inviato il messaggio"
+    },
 
-const percorso = mongoose.model('percorso', percorsoSchema);
+    categoria: {
+        type: String,
+        enum: ['corsa', 'trekking', 'ciclismo'],
+        required: true
+    },
 
-module.exports = percorso;
+    difficolta: int,
+    durata: int,
+
+    voti: [{
+        type: int
+    }],
+
+    numerovoti: int,
+    recensione: int,
+    selfdescription: String,
+    //mappa?
+});
+
+
+const Percorso = mongoose.model('Percorso', percorsoSchema);
+
+module.exports = Percorso;

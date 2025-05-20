@@ -1,13 +1,21 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/messaggio.yaml', 'utf8'));
+const messaggioSchema = new mongoose.Schema({
 
-// Crea lo schema Mongoose usando i dati YAML
-const messaggioSchema = new mongoose.Schema(schemaData);
+    data: {
+        type: Date,
+        required: true
+    },
 
-const messaggio = mongoose.model('messaggio', messaggioSchema);
+    mittente: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'UtenteRegistrato',
+        required: true,
+        description: "id dell'utente che ha inviato il messaggio"
+    },
+    
+    testo: String
+});
 
-module.exports = messaggio;
+const Messaggio = mongoose.model('Messaggio', messaggioSchema);
+module.exports = Messaggio;
