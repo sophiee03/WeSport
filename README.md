@@ -1,6 +1,5 @@
-<pre lang="markdown">
 ## Project Layout
-```
+<pre lang="markdown">
 C:.
 |   apiary.apib
 |   README.md
@@ -66,4 +65,4 @@ C:.
 |   \---Login
 |           LoginUI.js
 |
-\---percorsi ```</pre>
+\---percorsi </pre>
