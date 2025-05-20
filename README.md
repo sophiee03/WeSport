@@ -1,4 +1,4 @@
-##📁 Project Layout
+## Project Layout
 C:.
 |   apiary.apib
 |   README.md
