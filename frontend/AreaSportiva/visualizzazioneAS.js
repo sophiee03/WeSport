@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import {
   View,
   Text,
@@ -9,17 +10,6 @@ import {
   ScrollView,
 } from 'react-native';
 
-useEffect(() => {
-  fetch(' https://private-44d07-wesport2.apiary-mock.com')
-    .then((res) => res.json()) // Converte la risposta in JSON
-    .then((data) =>{
-        setDatiDB(data);
-        setRisultati(data);
-    }) // Salva i dati nello stato e nel DB
-    .catch((error) => console.error('Errore nella fetch:', error));
-}, []);
-
-
 export default function CercaAreeSportive() {
   const [datiDB, setDatiDB] = useState([]);
   const [query, setQuery] = useState('');
@@ -27,10 +17,23 @@ export default function CercaAreeSportive() {
   const [risultati, setRisultati] = useState([]);
 
   useEffect(() => {
+    fetch('https://private-44d07-wesport2.apiary-mock.com')
+      .then((res) => res.json())
+      .then((data) => {
+        setDatiDB(data);
+        setRisultati(data);
+        suggerisciCategoria();
+      })
+      .catch((error) => console.error('Errore nella fetch:', error));
+  }, []);
+
+  useEffect(() => {
     filtra();
   }, [query, tipoFiltro, datiDB]);
 
   const filtra = () => {
+    if (query) salvaRicerca(query);
+
     let filtrati = datiDB.filter((a) =>
       a.nome.toLowerCase().includes(query.toLowerCase()) ||
       a.sport.toLowerCase().includes(query.toLowerCase())
@@ -41,6 +44,36 @@ export default function CercaAreeSportive() {
     }
 
     setRisultati(filtrati);
+  };
+
+  const salvaRicerca = async (termine) => {
+    if (!termine || termine.trim() === '') return;
+
+    try {
+      const storico = await AsyncStorage.getItem('ricerche');
+      const ricerche = storico ? JSON.parse(storico) : {};
+
+      ricerche[termine] = (ricerche[termine] || 0) + 1;
+
+      await AsyncStorage.setItem('ricerche', JSON.stringify(ricerche));
+    } catch (error) {
+      console.error('Errore nel salvataggio ricerche:', error);
+    }
+  };
+
+  const suggerisciCategoria = async () => {
+    try {
+      const storico = await AsyncStorage.getItem('ricerche');
+      const ricerche = storico ? JSON.parse(storico) : {};
+
+      const piuVisto = Object.entries(ricerche).sort((a, b) => b[1] - a[1])[0];
+
+      if (piuVisto && piuVisto[0]) {
+        setQuery(piuVisto[0]);
+      }
+    } catch (error) {
+      console.error('Errore nel suggerimento categoria:', error);
+    }
   };
 
   const FiltroButton = ({ tipo }) => (
@@ -61,9 +94,6 @@ export default function CercaAreeSportive() {
       <Text>Tipo: {item.tipo}</Text>
       <Text>Sport: {item.sport}</Text>
       <Text>Indirizzo: {item.indirizzo}</Text>
-      {item.servizi.length > 0 && (
-        <Text>Servizi: {item.servizi.join(', ')}</Text>
-      )}
     </View>
   );
 
@@ -147,5 +177,12 @@ const styles = StyleSheet.create({
   filtroTesto: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  sezioneExtra: {
+    marginTop: 8,
+  },
+  sezioneTitolo: {
+    fontWeight: 'bold',
+    marginTop: 6,
   },
 });
