@@ -5,7 +5,6 @@ const Annuncio = require("../models/annuncio");
 
 const {isAuthenticated} = require("../auth/verifytoken")
 
-
 // Endpoint per recuperare tutti gli annunci
 router.get('/annuncio', isAuthenticcated, async (req, res) => {
   try {
