@@ -1,82 +1,132 @@
 FORMAT: 1A
-HOST: https://polls.apiblueprint.org/
+HOST: https://api.wesport.it
 
-# wesport
+# WeSport API
 
-Wesport project 
+##UTENTE 
+### profilo utente
+####info profilo UR [GET /api/profile]
++ Request (application/json)
+    + Headers
 
-## Questions Collection [/questions]
+            Authorization: `Bearer {token}`
 
-Ciao andree
++ Response 200 (application/json)
+    + Attributes (object)
+        + nomeutente: `lucaverdi03` (string) - nome utente
+        + email: `lucaverdi03@gmail.com` (string) - email utente
+        + tipo: `registrato` (string) tipologia di utente
+        + punti: `20` (number) - unti totali accumulati
+        + fotoprofilo: `https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhGqmwotiLoQeHHhOG8tiIOUs-gJOKXL98pw&s` (string) - URL della foto del profilo
+        + selfdescription: `amante della natura e della bici` (string) - selfdescription
+        + segnalazioni: `` (array) - segnalazioni
+        + annunci: `` (array) - annunci
+        
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizato" (string)
 
-### List All Questions [GET]
+
+###gestione regsitrazione
+
+###login con google [GET /auth/google]
++ Request
+    + Headers
+    
+          Authorization: `Bearer {token}`
+
++ Response 302 (text/plain)
+    + Headers
+    
+            Location: https://accounts.google.com/o/oauth2/auth
+
+###login [POST /login]
++ Request (application/json)
+
+    + Attributes (object)
+        + email: `lucaverdi03@gmail.com` (string, required) - Email dell'utente
+        + password: `password123` (string, required) - Password dell'utente
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
-        ]
+    + Attributes (object)
+        + success: true (boolean)
+        + message: "login riuscito" (string)
+        + token: `eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c` (string)
 
-### Create a New Question [POST]
++ Response 401 (application/json)
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+    + Attributes (object)
+        + message: "credenziali non valide" (string)
 
-+ Request (application/json)
-
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
-
-+ Response 201 (application/json)
-
+###logout [GET /logout]
++ Request
     + Headers
+    
+            Authorization: `Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c`
 
-            Location: /questions/2
-
++ Response 200 (text/plain)
     + Body
+    
+            "logout effettuato con successo"
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ Response 401 (text/plain)
+    + Body
+    
+            "utente non autorizzato"
+            
+
+###eliminazione utente [DELETE /delete]
++ Parameters
+    + formId: `67890` (string) - The unique identifier of the form to delete
+
++ Request
+    + Headers
+    
+            Authorization: `Bearer {admin_token}`
+            
++ Response 204 (application/json)
+    + Attributes (object)
+        + message: "utente eliminato con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "non autenticato" (string)
+  
++ Response 403 (application/json)
+    + Attributes (object) 
+        + message: "accesso negato" (string) 
+
++ Response 404 (text/plain)
+    + Attributes (object)
+        + message:  "utente non trovato" (string)
+
+
+##ANNUNCI 
+###lista annunci
+###chat annunci
+###creazione nuovo annuncio
+
+##AVVISI
+###lista avvisi
+###nuovo avviso
+
+##AMMINISTRATORE
+###lato comune
+
+##PERCORSI
+###lista percorsi
+###mappe
+###nuovo percorso
+
+##GESTIONE AUTENTICAZIONE
+
+##AZIENDA VERIFICATA
+###profilo azienda verificata [POST ]
+
+
+##SEGNALAZIONI
+###segnalazione
+
+###lista segnalazioni
+###compilazione modulo segnalazioni
