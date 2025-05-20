@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gestione Annunci</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: auto; padding: 20px;}
+    .annuncio { border: 1px solid #ccc; margin-bottom: 10px; padding: 10px; }
+    button { margin-right: 10px; }
+    form { margin-top: 20px; }
+  </style>
+</head>
+<body>
+
+  <h1>Annunci Disponibili</h1>
+  <div id="listaAnnunci">
+    <!-- Qui appaiono gli annunci -->
+  </div>
+
+  <h2>Crea un nuovo annuncio</h2>
+  <form id="formCreaAnnuncio">
+    <input type="text" name="titolo" placeholder="Titolo" required />
+    <br /><br />
+    <textarea name="descrizione" rows="4" placeholder="Descrizione" required></textarea>
+    <br /><br />
+    <button type="submit">Crea Annuncio</button>
+  </form>
+
+  <script src="annunci.js"></script>
+  <script>
+    document.getElementById("formCreaAnnuncio").addEventListener("submit", creaAnnuncio);
+  </script>
+</body>
+</html>
