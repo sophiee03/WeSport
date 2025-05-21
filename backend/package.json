@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -12,12 +13,8 @@
   "dependencies": {
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-<<<<<<< HEAD
-    "google-auth-library": "^9.15.1",
-=======
     "js-yaml": "^4.1.0",
     "mongoose": "^8.14.2",
->>>>>>> b81cfb6dbd760d94e36e0bf6e4f88ebd8538a0c3
     "swagger-ui-express": "^5.0.1",
     "yaml": "^2.7.1"
   }

@@ -120,28 +120,28 @@ paths:
       summary: Ottieni le informazioni della chat (utente registrato iscritto a quell'annuncio)
       tags:
           - annunci
-    security:
+      security:
       - bearerAuth: []   # richiede autenticazione JWT
-    parameters:
+      parameters:
       - name: idAnnuncio
         in: path
         required: true
         schema:
           type: string
         description: ID dell'annuncio di cui vuoi ottenere la chat
-    responses:
-      '200':
-        description: Informazioni della chat recuperate con successo
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/chat'
-      '401':
-        description: Non autenticato - token mancante o non valido
-      '403':
-        description: Accesso negato - utente non autorizzato a vedere questa chat
-      '404':
-        description: Chat o annuncio non trovato
+      responses:
+        '200':
+          description: Informazioni della chat recuperate con successo
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/chat'
+        '401':
+          description: Non autenticato - token mancante o non valido
+        '403':
+          description: Accesso negato - utente non autorizzato a vedere questa chat
+        '404':
+          description: Chat o annuncio non trovato
 
   /annunci/{idAnnuncio}/chat/{idchat}/messaggi:
     get:
@@ -178,6 +178,8 @@ paths:
           description: Accesso negato - utente non iscritto all'annuncio o non autorizzato
         '404':
           description: Annuncio, chat o messaggi non trovati
+
+
   /annuncio/{idAnnuncio}/iscritti:    #?????? è corretto? o devo mettere utenteregistrato?
     get:
       summary: Ottieni gli utenti iscritti a un annuncio (utente registrato)
@@ -275,7 +277,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/areasportiva
+                  $ref: '#/components/schemas/areasportiva'
         '500':
           description: Errore interno
 
@@ -298,7 +300,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/annunci
+                  $ref: '#/components/schemas/annunci'
 
   /sport/{sport}/percorso:
     get:
@@ -649,6 +651,7 @@ components:
         type: http
         scheme: bearer
         bearerFormat: JWT
+
     annuncio:
       type: object
       properties:
@@ -658,13 +661,14 @@ components:
           type: string
           description: "nomeutente dell'utente che ha creato l'annuncio"
         Npersone:
-          type: int
+          type: integer
         categoria: 
           $ref: '#/components/schemas/sport'
         description:
           type: string
         dataOrario:
-          type: date-time
+          type: string
+          format: date-time
         iscritti:
           type: array
           items:
@@ -695,7 +699,7 @@ components:
         categoria:
           type: array
           items:
-            $ref: '#/components/schema/sport'
+            $ref: '#/components/schemas/sport'
         selfDescription:
           type: string
         privata:
@@ -703,11 +707,11 @@ components:
         voti:
           type: array
           items:
-            type: int
+            type: integer
         numerovoti:
-          type: int
+          type: integer
         recensione:
-          type: int
+          type: integer
       required:
         - nome
         - zona
@@ -715,18 +719,19 @@ components:
         - privata
 
     sport:
-      type: string
-      enum:
-        - calcio
-        - basket
-        - tennis
-        - padel
-        - corsa
-        - trekking
-        - ciclismo
-        - pallavolo/beach_volley
-        - nuoto
-        - arrampicata
+      tipi:
+        type: string
+        enum:
+          - calcio
+          - basket
+          - tennis
+          - padel
+          - corsa
+          - trekking
+          - ciclismo
+          - pallavolo/beach_volley
+          - nuoto
+          - arrampicata
 
     chat:
       type: object
@@ -736,22 +741,23 @@ components:
           description: ID dell'annuncio a cui è collegata la chat
         partecipanti:
           type: array
-            items:
-              type: string
+          items:
+            type: string
             description: ID degli utenti coinvolti nella chat
         messaggi:
           type: array
           items:
             $ref: '#/components/schemas/messaggio'
       required:
-        - id
-        - idannuncio
+        - idChat
+        - partecipanti
 
     messaggio:
       type: object
       properties:
         data:
-          type: date
+          type: string
+          format: date
         mittente:
           type: string
           description: "id dell'utente che ha inviato il messaggio"
@@ -765,7 +771,7 @@ components:
       type: object
       properties:
         idPercorso:
-          type: int
+          type: integer
         idcreatore:
           type: string
           description: "id dell'utente che ha creato il percorso"
@@ -776,22 +782,22 @@ components:
             - trekking
             - ciclismo
         difficolta:
-          type: int
+          type: integer
         durata:
-          type: int
+          type: integer
         voti:
           type: array
           items:
-            type: int
+            type: integer
         numerovoti:
-          type: int
+          type: integer
         recensione:
-          type: int
+          type: integer
         selfDescription:
           type: string
         #MAPPA DA METTERE
       required:
-        - idpercorso
+        - idPercorso
         - idcreatore
         - categoria
 
@@ -810,7 +816,7 @@ components:
             - azienda    
             - aziendaVer  #verificata
         punti:
-          type: int
+          type: integer
           default: 0
         fotoprofilo:
           type: string
@@ -837,12 +843,12 @@ components:
       type: object
       properties:
         idSegnalazione:
-          type: int
+          type: integer
         data:
           type: date
         descrizione:
           type: string
-        idCreatore:
+        idcreatore:
           type: string
           description: 'id utente che ha creato la segnalazione'
         foto:
@@ -855,7 +861,7 @@ components:
             - elaborazione
             - rifiutata
       required:
-        - idsegnalazione
+        - idSegnalazione
         - data
         - idcreatore
         - foto
@@ -864,7 +870,7 @@ components:
       type: object
       properties:
         idAvviso:
-          type: int
+          type: integer
         data:
           type: date
         categoria:
@@ -884,18 +890,9 @@ components:
         testo: 
           type: string
       required:
-        - idavviso 
+        - idAvviso 
         - data
         - categoria
-    
-    LoginRequest:
-      type: object
-      properties:
-        token:
-          type: string
-          description: Token fornito dal provider di identità (es. Google)
-      required:
-        - token
 
     verifytoken:
       type: object

@@ -1,13 +1,39 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/segnalazione.yaml', 'utf8'));
+const segnalazioneSchema = new mongoose.Schema({
+  
+  idSegnalazione: { 
+    type: int,
+    required: true 
+  },
 
-// Crea lo schema Mongoose usando i dati YAML
-const segnalazioneSchema = new mongoose.Schema(schemaData);
+  data: {
+    type: date,
+    required: true
+  },
 
-const segnalazione = mongoose.model('segnalazione', segnalazioneSchema);
+  idCreatore: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'UtenteRegistrato',
+    required: true,
+    description: "id dell'utente che ha inviato il messaggio"
+  },
 
-module.exports = segnalazione;
+  foto: {
+    type: string,
+    required: true,
+    description: 'url della foto importata/scattata'
+  },
+
+  descrizione: String,
+
+  stato: {
+    type: string,
+    enum: ['accettata', 'elaborazione', 'rifiutata'], 
+  }
+
+});
+
+const Segnalazione = mongoose.model('Segnalazione', segnalazioneSchema);
+
+module.exports = Segnalazione;;

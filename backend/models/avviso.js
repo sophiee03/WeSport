@@ -1,13 +1,29 @@
 const mongoose = require('mongoose');
-const fs = require('fs');
-const yaml = require('js-yaml');
+const avvisoSchema = new mongoose.Schema({
+ 
+    idAvviso: {
+        type: int,
+        required: true
+    },
+    
+    data: {
+        type: date,
+        required: true
+    },
 
-// Carica lo schema da YAML
-const schemaData = yaml.load(fs.readFileSync('./components/schemas/avviso.yaml', 'utf8'));
+    categoria: {
+         type: String,
+         enum:['evento', 'chiusura/manutenzione', 'festival'],
+         required: true
+    },
 
-// Crea lo schema Mongoose usando i dati YAML
-const avvisoSchema = new mongoose.Schema(schemaData);
+    stato: {
+        type: String,
+          enum: ['in_corso', 'annullato', 'rimandato', 'concluso', 'coming soon']           
+    },
+      
+    testo:  String
+});
 
-const avviso = mongoose.model('avviso', avvisoSchema);
-
-module.exports = avviso;
+const Avviso = mongoose.model('Avviso', avvisoSchema, 'avviso');
+module.exports = Avviso;
