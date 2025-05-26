@@ -13,7 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(express.json());
 
 // Caricamento documentazione Swagger/OpenAPI
-const openapiPath = path.join(__dirname, 'WeSport.yaml'); // Assicurati che il file si trovi nella stessa directory del server.js
+const openapiPath = path.join(__dirname, '..', 'WeSport.yaml'); // Assicurati che il file si trovi nella stessa directory del server.js
 const openapiDocument = yaml.load(fs.readFileSync(openapiPath, 'utf8'));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(openapiDocument));
