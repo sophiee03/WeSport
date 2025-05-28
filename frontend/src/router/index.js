@@ -1,10 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import LoginView from '../components/LoginView.vue';
-import Annunci from '../components/Annunci.vue';
+import LoginUI from '../views/LoginUI.vue';
+import AreaSportivaUI from '../views/AreaSportivaUI.vue';
+import Home from '../views/Home.vue';
+//import Annunci from '../components/Annunci.vue';
 
 const routes = [
-  { path: '/', component: LoginView },
-  { path: '/annunci', component: Annunci },
+  { path: '/login', component: LoginUI },
+  { path: '/', component: Home},
+  { path: '/sport/:sport', component: AreaSportivaUI, props: true},
+  //{ path: '/annunci', component: Annunci },
 ];
 
 const router = createRouter({

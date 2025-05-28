@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const swaggerUi = require('swagger-ui-express');
 const fs = require('fs');
 const yaml = require('js-yaml');
-const path = require('path');
 require('dotenv').config();
 
 const app = express();
