@@ -2,15 +2,23 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginUI from '../screens/LoginUI';
-import VisualizzazioneAS from '../components/visualizzazioneAS'; // importa il file JS
+import visualizzazioneAS from '../components/visualizzazioneAS'; // importa i file JS
+import HomePage from '../screens/HomePage';
+import ProfiloUtente from '../screens/ProfiloUtente';
+import Annunci from '../screens/Annunci';
+import Avvisi from '../screens/Avvisi';
 
 const Stack = createNativeStackNavigator();
 
 const AppNavigation = () => {
   return (
-    <Stack.Navigator initialRouteName="visualizzazioneAS">
+    <Stack.Navigator initialRouteName="HomePage">
+      <Stack.Screen name="Home" component={HomePage} />
+      <Stack.Screen name="AreeSportive" component={visualizzazioneAS} />
       <Stack.Screen name="Login" component={LoginUI} />
-      <Stack.Screen name="VisualizzazioneAS" component={VisualizzazioneAS} />
+      <Stack.Screen name="ProfiloUtente" component={ProfiloUtente} />
+      <Stack.Screen name="Annunci" component={Annunci} />
+      <Stack.Screen name="Avvisi" component={Avvisi} />
     </Stack.Navigator>
   );
 };

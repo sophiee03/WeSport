@@ -1,4 +1,3 @@
-// App.js
 import React from 'react';
 import {
   View,
@@ -9,28 +8,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ProfiloUtente from './Utente/Utente';
-import Annunci from './screens/Annunci';
-import Avvisi from './screens/Avvisi';
-import AreeSportive from './AreaSportiva/AreaSportiva';
-
-const Stack = createNativeStackNavigator();
-
-export default function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="ProfiloUtente" component={ProfiloUtente} />
-        <Stack.Screen name="Annunci" component={Annunci} />
-        <Stack.Screen name="Avvisi" component={Avvisi} />
-        <Stack.Screen name="AreeSportive" component={AreeSportive} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
 
 const sportData = [
   { nome: 'Calcio', colore: '#4CAF50' },
@@ -44,7 +21,7 @@ const sportData = [
   { nome: 'Nuoto', colore: '#3F51B5' },
 ];
 
-export  function Home() {
+export default function Home() {
   const navigation = useNavigation();
 
   const vaiAlleAree = (sport) => {
