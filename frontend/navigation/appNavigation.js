@@ -1,7 +1,7 @@
 //per il routing
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import visualizzazioneAS from '../components/visualizzazioneAS'; // importa i file JS
+import visualizzazioneAS from '../screens/visualizzazioneAS'; // importa i file JS
 import HomePage from '../screens/HomePage';
 import ProfiloUtente from '../screens/ProfiloUtente';
 import Annunci from '../screens/Annunci';
