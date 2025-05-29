@@ -1,13 +1,15 @@
 //file principale dell'app
 
 import React from 'react';
-import { View, Text } from 'react-native';
-import CercaAreeSportive from './components/AreaSportiva'; // o screens/CercaAree
+import { NavigationContainer } from '@react-navigation/native';
+import AppNavigation from './navigation/appNavigation';
 
-export default function App() {
+const App = () => {
   return (
-    <View style={{ flex: 1 }}>
-      <CercaAreeSportive />
-    </View>
+    <NavigationContainer>
+      <AppNavigation />
+    </NavigationContainer>
   );
-}
+};
+
+export default App;
