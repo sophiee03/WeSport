@@ -11,13 +11,7 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const BASE_URL = 'http://localhost:3000';
-const token = 'INSERISCI_IL_TUO_TOKEN'; // Sostituisci con login reale
-
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${token}`,
-});
+const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
 export default function AnnunciScreen() {
   const [annunci, setAnnunci] = useState([]);
@@ -25,9 +19,16 @@ export default function AnnunciScreen() {
   const [descrizione, setDescrizione] = useState('');
   const navigation = useNavigation();
 
+  useEffect(() => {
+      if (!isLoggedIn) {
+        Alert.alert('Accesso negato', 'Devi effettuare il login per creare un annuncio.');
+        navigation.navigate('LoginUI');
+      }
+    }, [isLoggedIn]);
+
   const caricaAnnunci = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/annuncio`, {
+      const res = await fetch(`${BASE_URL}`, {
         headers: getHeaders(),
       });
       if (!res.ok) throw new Error('Errore caricamento annunci');
@@ -41,7 +42,7 @@ export default function AnnunciScreen() {
 
   const iscrivitiAnnuncio = async (id) => {
     try {
-      const res = await fetch(`${BASE_URL}/${id}/iscritti`, {
+      const res = await fetch(`${BASE_URL}/${idAnnuncio}/iscritti`, {
         method: 'POST',
         headers: getHeaders(),
       });
@@ -56,7 +57,7 @@ export default function AnnunciScreen() {
 
   const disiscrivitiAnnuncio = async (id) => {
     try {
-      const res = await fetch(`${BASE_URL}/${id}/iscritti`, {
+      const res = await fetch(`${BASE_URL}/${idAnnuncio}/iscritti`, {
         method: 'DELETE',
         headers: getHeaders(),
       });
@@ -92,7 +93,7 @@ export default function AnnunciScreen() {
   };
 
   const vaiAllaChat = (idAnnuncio) => {
-    navigation.navigate('Chat', { idAnnuncio });
+    navigation.navigate('chat', { idAnnuncio });
   };
 
   useEffect(() => {
@@ -101,17 +102,21 @@ export default function AnnunciScreen() {
 
   const renderItem = ({ item }) => (
     <View style={styles.card}>
-      <TouchableOpacity onPress={() => navigation.navigate('Dettaglio', { id: item._id })}>
+      <TouchableOpacity onPress={() => navigation.navigate('visualizzaAnnuncio', { idAnnuncio: item.idAnnuncio })}>
         <Text style={styles.titolo}>{item.titolo}</Text>
         <Text>{item.descrizione}</Text>
       </TouchableOpacity>
       <View style={styles.rigaBottoni}>
-        <Button title="Iscriviti" onPress={() => iscrivitiAnnuncio(item._id)} />
-        <Button title="Disiscriviti" onPress={() => disiscrivitiAnnuncio(item._id)} />
-        <Button title="Chat" onPress={() => vaiAllaChat(item._id)} />
+        <Button title="Iscriviti" onPress={() => iscrivitiAnnuncio(item.idAnnuncio)} />
+        <Button title="Disiscriviti" onPress={() => disiscrivitiAnnuncio(item.idAnnuncio)} />
+        <Button title="Chat" onPress={() => vaiAllaChat(item.idAnnuncio)} />
       </View>
     </View>
   );
+
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <View style={styles.container}>
