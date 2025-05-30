@@ -1,82 +1,92 @@
-// modifica per visualizzare filtrato solo quelli
 import React, { useEffect, useState } from 'react';
 import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  FlatList,
-  Image,
-  ActivityIndicator
+  View, Text, StyleSheet, ActivityIndicator,
+  FlatList, TouchableOpacity
 } from 'react-native';
 
-const CATEGORIES = ['corsa', 'trekking', 'ciclismo'];
 const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso';
 
-export default function ListaPercorsi({ navigation }) {
+export default function ListaPercorsi({ route, navigation }) {
+  const { categoria } = route.params; // ricevi categoria come parametro
   const [percorsi, setPercorsi] = useState([]);
-  const [filtro, setFiltro] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch(BASE_URL)
-      .then(res => res.json())
+    fetchPercorsi();
+  }, []);
+
+  const fetchPercorsi = () => {
+    setLoading(true);
+    fetch(`${BASE_URL}`)
+      .then(res => {
+        if (!res.ok) throw new Error('Errore nel caricamento dei percorsi');
+        return res.json();
+      })
       .then(data => {
         setPercorsi(data);
         setLoading(false);
       })
       .catch(err => {
-        console.error('Errore:', err);
+        console.error(err.message);
         setLoading(false);
       });
-  }, []);
+  };
 
-  const percorsiFiltrati = filtro
-    ? percorsi.filter(p => p.categoria === filtro)
-    : percorsi;
-
-  const renderPercorso = ({ item }) => (
+  const renderItem = ({ item }) => (
     <TouchableOpacity
       style={styles.card}
-      onPress={() => navigation.navigate('VisualizzaPercorso', { idPercorso: item.id })}
+      onPress={() => navigation.navigate('VisualizzazionePercorso', { idPercorso: item.id })}
     >
-      <Text style={styles.cardTitle}>{item.titolo}</Text>
-      <Text style={styles.cardCategory}>{item.categoria}</Text>
+      <Text style={styles.cardTitle}>{item.nome}</Text>
       <Text style={styles.cardText}>Difficoltà: {item.difficolta}</Text>
       <Text style={styles.cardText}>Durata: {item.durata} min</Text>
     </TouchableOpacity>
   );
 
-  if (loading) {
-    return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
-  }
-
   return (
     <View style={styles.container}>
-      {/* Filtro categoria */}
-      <View style={styles.filtroContainer}>
-        {CATEGORIES.map(cat => (
-          <TouchableOpacity
-            key={cat}
-            style={[
-              styles.filtroBtn,
-              filtro === cat && styles.filtroBtnAttivo
-            ]}
-            onPress={() => setFiltro(filtro === cat ? null : cat)}
-          >
-            <Text style={styles.filtroText}>{cat}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      <Text style={styles.header}>Percorsi per: {categoria.toUpperCase()}</Text>
 
-      {/* Lista percorsi */}
-      <FlatList
-        data={percorsiFiltrati}
-        renderItem={renderPercorso}
-        keyExtractor={item => item.id.toString()}
-        contentContainerStyle={styles.list}
-      />
+      {loading ? (
+        <ActivityIndicator size="large" style={{ marginTop: 20 }} />
+      ) : (
+        <FlatList
+          data={percorsi}
+          keyExtractor={item => item.id.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={styles.list}
+        />
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 12,
+  },
+  header: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 16,
+  },
+  list: {
+    paddingBottom: 16,
+  },
+  card: {
+    padding: 14,
+    marginBottom: 10,
+    backgroundColor: '#f1f2f6',
+    borderRadius: 8,
+    elevation: 2,
+  },
+  cardTitle: {
+    fontWeight: 'bold',
+    fontSize: 18,
+  },
+  cardText: {
+    fontSize: 14,
+    marginTop: 4,
+  },
+});
