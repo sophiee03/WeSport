@@ -1,124 +1,161 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
+import { getHeaders } from 'apiUtils';
+import barraSezioni from './barraSezioni';
 
-const BASE_URL = 'http://api.weSport.it/v1/annunci';
+const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
-export default function DettaglioAnnuncio({ route }) {
-  const { idAnnuncio } = route.params;
+export default function VisualizzaAnnuncio({ isLoggedIn, userId }) {
   const [annuncio, setAnnuncio] = useState(null);
+  const [isIscritto, setIsIscritto] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [nomeutente, setUserId] = useState(null);
+  const route = useRoute();
+  const navigation = useNavigation();
+  const { idAnnuncio } = route.params;
+
+  const caricaAnnuncio = async () => {
+    try {
+      const res = await fetch(`${BASE_URL}/${idAnnuncio}`, {
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error('Errore caricamento annuncio');
+      const data = await res.json();
+      setAnnuncio(data);
+
+      // verifica se utente è iscritto
+      const iscritti = data.iscritti || [];
+      const isUserIscritto = iscritti.includes(userId);
+      setIsIscritto(isUserIscritto);
+      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Errore', 'Errore nel caricamento dell\'annuncio');
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const idUtente = await AsyncStorage.getItem('nomeutente'); // recupera l'ID dell'utente loggato
-        setUserId(idUtente);
+    caricaAnnuncio();
+  }, []);
 
-        const res = await fetch(`${BASE_URL}/${idAnnuncio}`);
-        if (!res.ok) throw new Error('Annuncio non trovato');
-        const data = await res.json();
-        setAnnuncio(data);
-      } catch (err) {
-        Alert.alert('Errore', err.message);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const gestisciIscrizione = async (azione) => {
+    if (!isLoggedIn) {
+      Alert.alert('Accesso richiesto', 'Devi essere loggato per iscriverti');
+      navigation.navigate('LoginUI');
+      return;
+    }
 
-    fetchData();
-  }, [id]);
+    // Se annuncio completo blocca iscrizione
+    if (
+      azione === 'iscriviti' &&
+      annuncio.iscritti.length >= annuncio.Npersone
+    ) {
+      Alert.alert('Annuncio completo', 'Non puoi iscriverti, annuncio pieno');
+      return;
+    }
 
-  if (loading) {
-    return (
-      <View style={styles.loader}>
-        <ActivityIndicator size="large" color="#007BFF" />
-      </View>
-    );
-  }
+    try {
+      const metodo = azione === 'iscriviti' ? 'POST' : 'DELETE';
+      const res = await fetch(`${BASE_URL}/${idAnnuncio}/iscritti`, {
+        method: metodo,
+        headers: getHeaders(),
+      });
+      if (!res.ok) throw new Error('Errore nell\'iscrizione/disiscrizione');
+      setIsIscritto(azione === 'iscriviti');
 
-  if (!annuncio) {
-    return (
-      <View style={styles.loader}>
-        <Text>Annuncio non trovato</Text>
-      </View>
-    );
-  }
+      // Aggiorna i dati dell'annuncio
+      await caricaAnnuncio();
 
-  //Nasconde l'annuncio se è pieno
-  if (annuncio.iscritti.length >= annuncio.Npersone) {
-    return (
-      <View style={styles.loader}>
-        <Text>Annuncio non più disponibile (posti esauriti)</Text>
-      </View>
-    );
-  }
+      Alert.alert(
+        'Successo',
+        azione === 'iscriviti' ? 'Iscrizione avvenuta con successo' : 'Disiscrizione avvenuta con successo!'
+      );
+    } catch (err) {
+      console.error(err);
+      Alert.alert('Errore', 'Operazione non riuscita');
+    }
+  };
 
-  const utenteIscritto = annuncio.iscritti.includes(userId);
+  const vaiAllaChat = () => {
+    if (!isIscritto) return;
+    navigation.navigate('Chat', { idAnnuncio });
+  };
+
+  if (loading) return <Text style={styles.caricamento}>Caricamento...</Text>;
+  if (!annuncio) return <Text style={styles.caricamento}>Annuncio non trovato</Text>;
+
+  const iscrittiCount = annuncio.iscritti ? annuncio.iscritti.length : 0;
+  const annuncioCompleto = iscrittiCount >= annuncio.Npersone;
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.titolo}>Dettaglio Annuncio</Text>
+    <View style={styles.container}>
 
-      <Text style={styles.label}>Categoria:</Text>
-      <Text>{annuncio.categoria}</Text>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <Text style={styles.backText}>← Torna agli annunci</Text>
+      </TouchableOpacity>
 
-      <Text style={styles.label}>Numero di Persone:</Text>
-      <Text>{annuncio.Npersone}</Text>
+      <Text style={styles.titolo}>Dettagli Annuncio</Text>
 
-      <Text style={styles.label}>Descrizione:</Text>
-      <Text>{annuncio.description}</Text>
+      <View style={styles.row}>
+        <Text style={styles.capogruppo}>Capogruppo: {annuncio.idCapogruppo}</Text>
+        <Text style={styles.categoria}>{annuncio.categoria}</Text>
+      </View>
 
-      <Text style={styles.label}>Data e Orario:</Text>
-      <Text>{new Date(annuncio.dataOrario).toLocaleString()}</Text>
+      <Text style={styles.descrizione}>{annuncio.descrizione}</Text>
 
-      {utenteIscritto ? (
-        <>
-          <Text style={styles.label}>Iscritti:</Text>
-          {annuncio.iscritti.length > 0 ? (
-            annuncio.iscritti.map((idUtente, index) => (
-              <Text key={index}>• {idUtente}</Text>
-            ))
-          ) : (
-            <Text>Nessun iscritto</Text>
-          )}
-        </>
-      ) : (
-        <Text style={styles.note}>Iscritti visibili solo se sei iscritto</Text>
-      )}
-    </ScrollView>
+      <View style={styles.row}>
+        <Text style={styles.iscritti}>
+          Iscritti: {iscrittiCount} / {annuncio.Npersone}
+        </Text>
+        <Text style={styles.data}>
+          Data e ora: {new Date(annuncio.dataOrario).toLocaleString()}
+        </Text>
+      </View>
+
+      <View style={styles.bottoni}>
+        <Button
+          title="Iscriviti"
+          onPress={() => gestisciIscrizione('iscriviti')}
+          disabled={!isLoggedIn || isIscritto || annuncioCompleto}
+        />
+        <Button
+          title="Disiscriviti"
+          onPress={() => gestisciIscrizione('disiscriviti')}
+          disabled={!isLoggedIn || !isIscritto}
+        />
+      </View>
+
+      <Button
+        title="Vai alla chat"
+        onPress={vaiAllaChat}
+        disabled={!isLoggedIn || !isIscritto}
+      />
+
+      <barraSezioni />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    padding: 20,
+  container: { padding: 16, flex: 1, backgroundColor: '#fff' },
+  backButton: { marginBottom: 12 },
+  backText: { color: '#007bff', fontSize: 16 },
+  titolo: { fontSize: 22, fontWeight: 'bold', marginBottom: 12 },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
   },
-  loader: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+  capogruppo: { fontSize: 16, fontWeight: '600' },
+  categoria: { fontSize: 16, fontWeight: '600', color: '#007bff' },
+  descrizione: { fontSize: 16, marginBottom: 12 },
+  iscritti: { fontSize: 14, fontWeight: '500' },
+  data: { fontSize: 14, fontWeight: '500', color: '#555' },
+  bottoni: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginVertical: 20,
   },
-  titolo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  label: {
-    fontWeight: 'bold',
-    marginTop: 15,
-  },
-  note: {
-    marginTop: 15,
-    fontStyle: 'italic',
-    color: '#777',
-  },
+  caricamento: { marginTop: 20, fontSize: 16, textAlign: 'center' },
 });
