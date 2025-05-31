@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, Picker, Slider, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { isLoggedIn, getnomeutente } from '../utils/apiUtils'; 
+import { isLoggedIn, getnomeutente } from '../utils/apiutils'; 
 import BarraSezioni from '../components/barraSezioni';
 
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';

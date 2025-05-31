@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { getHeaders, isLoggedIn, getnomeutente } from '../utils/apiUtils';
+import { getHeaders, isLoggedIn, getnomeutente } from '../utils/apiutils';
 import BarraSezioni from '../components/barraSezioni';
 
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';

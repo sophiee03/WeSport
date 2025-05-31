@@ -1,13 +1,9 @@
 import React from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  ScrollView,
-} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
+import { isLoggedIn } from '../utils/apiutils'; 
+import BarraSezioni from '../components/barraSezioni'
 
 const sportData = [
   { nome: 'Calcio', colore: '#4CAF50' },
@@ -16,9 +12,9 @@ const sportData = [
   { nome: 'Padel', colore: '#F44336' },
   { nome: 'Tennis', colore: '#212121' },
   { nome: 'Trekking', colore: '#6D3E3E' },
-  { nome: 'Pallavolo', colore: '#BDBDBD' },
-  { nome: 'Beach Volley', colore: '#FF5722' },
+  { nome: 'Pallavolo/Beach Volley', colore: '#BDBDBD' },
   { nome: 'Nuoto', colore: '#3F51B5' },
+  { nome: 'Arrampicata', colore: '#FF5722' },
 ];
 
 export default function Home() {
@@ -28,12 +24,6 @@ export default function Home() {
     navigation.navigate('AreeSportive', { sport });
   };
 
-  const FooterIcon = ({ icon, screen }) => (
-    <TouchableOpacity onPress={() => navigation.navigate(screen)}>
-      <Ionicons name={icon} size={28} color="black" />
-    </TouchableOpacity>
-  );
-
   return (
     <View style={styles.container}>
       <View style={styles.topBar}>
@@ -41,9 +31,19 @@ export default function Home() {
           <Ionicons name="search" size={20} color="#888" style={{ marginRight: 8 }} />
           <Text style={{ color: '#888' }}>Search</Text>
         </View>
-        <TouchableOpacity onPress={() => navigation.navigate('ProfiloUtente')}>
+        <TouchableOpacity
+          onPress={async () => {
+            const logged = await isLoggedIn();
+            if (logged) {
+              navigation.navigate('ProfiloUtente');
+            } else {
+              navigation.navigate('LoginUI');
+            }
+          }}
+        >
           <Ionicons name="person-circle" size={32} color="black" />
         </TouchableOpacity>
+
       </View>
 
       <Text style={styles.sectionTitle}>Sport recenti</Text>
@@ -64,11 +64,7 @@ export default function Home() {
         ))}
       </View>
 
-      <View style={styles.footerNav}>
-        <FooterIcon icon="home-outline" screen="Home" />
-        <FooterIcon icon="chatbubble-ellipses-outline" screen="Annunci" />
-        <FooterIcon icon="notifications-outline" screen="Avvisi" />
-      </View>
+      <BarraSezioni />
     </View>
   );
 }

@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TextInput, Button, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, Button, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import BarraSezioni from '../components/barraSezioni'
+import { getnomeutente } from '../utils/apiutils'
+
+const BASE_URL = 'http://api.weSport.it/v1/';
 
 export default function ProfiloUtente() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const percorsi = [
-    { id: '1', nome: 'Bondone', descrizione: 'Percorso con la bici' },
-    { id: '2', nome: 'Trento sud', descrizione: 'Alla scoperta di Trento Sud' },
-  ];
-
-  const segnalazioni = [
-    { id: '1', luogo: 'Parchetto P.Dante', descrizione: 'Spaccini vendono droga', stato: 'Refused' },
-  ];
-
-  const punti = 4;
+  const navigation = useNavigation();
+  const [utente, setUtente] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   const getImageByPoints = (p) => {
     if (p >= 85) {
@@ -27,96 +23,182 @@ export default function ProfiloUtente() {
     }
   };
 
-  const handleLogin = () => {
-    if (username === 'admin' && password === '1234') {
-      setIsLoggedIn(true);
-      setUsername('');
-      setPassword('');
-    } else {
-      Alert.alert('Errore', 'Credenziali errate');
-    }
-  };
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const nomeutente = await getnomeutente();
+        if (!nomeutente) {
+          Alert.alert('Errore', 'Nome utente non disponibile');
+          setLoading(false);
+          return;
+        }
+        const response = await fetch(`${BASE_URL}/utenteregistrato/${nomeutente}`);
+        if (!response.ok) throw new Error('Errore nella risposta');
+        const data = await response.json();
+        setUtente(data);
+      } catch (error) {
+        Alert.alert('Errore', 'Impossibile caricare i dati utente');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchUserData();
+  }, []);
 
+  const formatDate = (iso) => new Date(iso).toLocaleDateString('it-IT');
+
+  // Funzione logout
   const handleLogout = () => {
-    setIsLoggedIn(false);
+    Alert.alert(
+      'Logout',
+      'Sei sicuro di voler fare logout?',
+      [
+        { text: 'Annulla', style: 'cancel' },
+        {
+          text: 'Esci',
+          style: 'destructive',
+          onPress: async () => {
+            try {
+              await AsyncStorage.multiRemove(['token', 'nomeutente']);
+              navigation.replace('HomePage');
+            } catch (error) {
+              Alert.alert('Errore', 'Impossibile effettuare logout');
+            }
+          },
+        },
+      ],
+      { cancelable: true }
+    );
   };
 
-  if (!isLoggedIn) {
-    // pagina login
+  if (loading) {
     return (
-      <View style={styles.loginContainer}>
-        <Text style={styles.loginTitle}>Accedi a WeSport</Text>
-        <TextInput
-          placeholder="Username"
-          style={styles.input}
-          value={username}
-          onChangeText={setUsername}
-          autoCapitalize="none"
-        />
-        <TextInput
-          placeholder="Password"
-          style={styles.input}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-        />
-        <Button title="Login" onPress={handleLogin} />
+      <View style={styles.centered}>
+        <Text>Caricamento in corso...</Text>
       </View>
     );
   }
 
-  // pagina principale con logout
+  if (!utente) {
+    return (
+      <View style={styles.centered}>
+        <Text>Nessun dato disponibile</Text>
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
+      {/* HEADER */}
       <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>←</Text>
+        </TouchableOpacity>
+
         <Text style={styles.title}>WeSport</Text>
-        <Button title="Logout" onPress={handleLogout} />
+
+        <TouchableOpacity onPress={handleLogout} style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
-      <View style={styles.profileContainer}>
-        <Image
-          source={{ uri: 'https://images.unsplash.com/photo-1502685104226-ee32379fefbe' }}
-          style={styles.avatar}
-        />
-        <Text style={styles.username}>marikarossi02</Text>
-        <Text style={styles.interests}>#calcio #corsa #trekking</Text>
+      {/* PROFILO */}
+      <View style={styles.profileRow}>
+        <Image source={{ uri: utente.fotoprofilo || 'https://via.placeholder.com/90' }} style={styles.foto} />
+        <View style={styles.profileInfo}>
+          <Text style={styles.usernameLarge}>{utente.username}</Text>
+        <Text style={styles.interestsDescription}>
+          {Array.isArray(utente.interessi) ? utente.interessi.join(', ') : 'Nessun interesse specificato'}
+        </Text>
+        </View>
       </View>
 
-      <View style={styles.pointsContainer}>
-        <Image
-          source={{ uri: getImageByPoints(punti) }}
-          style={styles.plant}
-        />
-        <Text style={styles.points}>{punti} punti</Text>
+      {/* BARRA CIRCOLARE */}
+      <View style={styles.pointsCircleContainer}>
+        <AnimatedCircularProgress
+          size={140}
+          width={12}
+          fill={utente.punti} // % di completamento (max 100)
+          tintColor="#4CAF50"
+          backgroundColor="#ddd"
+          rotation={0}
+          lineCap="round"
+        >
+          {() => (
+            <View style={styles.centerImageWrapper}>
+              <Image source={{ uri: getImageByPoints(utente.punti) }} style={styles.plantCenterImage} />
+              <Text style={styles.pointsText}>{utente.punti} punti</Text>
+            </View>
+          )}
+        </AnimatedCircularProgress>
       </View>
 
+      {/* ANNUNCI */}
       <View style={styles.section}>
-        <Text style={styles.sectionTitle}>I miei Percorsi</Text>
-        {percorsi.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <Text style={styles.cardTitle}>{item.nome}</Text>
-            <Text style={styles.cardDescription}>{item.descrizione}</Text>
-          </View>
-        ))}
+        <Text style={styles.sectionTitle}>I miei Annunci</Text>
+        {utente.annunci?.length > 0 ? (
+          utente.annunci.map((item) => (
+            <TouchableOpacity
+              key={item.idAnnuncio}
+              style={styles.card}
+              onPress={() => navigation.navigate('visualizzaAnnuncio', { annuncio: item.idAnnuncio })}
+            >
+              <Text style={styles.cardTitle}>{item.categoria}</Text>
+              <Text numberOfLines={2} style={styles.cardDescription}>{item.descrizione}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>Nessun annuncio pubblicato</Text>
+        )}
       </View>
 
+      {/* SEGNALAZIONI */}
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>Le mie Segnalazioni</Text>
-        {segnalazioni.map((item) => (
-          <View key={item.id} style={styles.card}>
-            <Text style={styles.cardTitle}>{item.luogo}</Text>
-            <Text style={styles.cardDescription}>{item.descrizione}</Text>
-            <Text style={styles.refused}>Refused</Text>
-          </View>
-        ))}
+        {utente.segnalazioni?.length > 0 ? (
+          utente.segnalazioni.map((item) => (
+            <TouchableOpacity
+              key={item.idSegnalazione}
+              style={styles.card}
+              onPress={() => navigation.navigate('visualizzaSegnalazione', { segnalazione: item.idSegnalazione })}
+            >
+              <Text style={styles.cardTitle}>{formatDate(item.data)}</Text>
+              <Text numberOfLines={2} style={styles.cardDescription}>{item.descrizione}</Text>
+              <Text style={[styles.stato, item.stato === 'Refused' && styles.refused]}>{item.stato}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>Nessuna segnalazione effettuata</Text>
+        )}
       </View>
+
+      {/* PERCORSI CONSIGLIATI */}
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>Percorsi Consigliati</Text>
+        {utente.percorsi?.length > 0 ? (
+          utente.percorsi.map((item) => (
+            <TouchableOpacity
+              key={item.idPercorso}
+              style={styles.card}
+              onPress={() => navigation.navigate('visualizzaPercorso', { percorso: item.idPercorso })}
+            >
+              <Text style={styles.cardTitle}>{item.categoria}</Text>
+              <Text numberOfLines={2} style={styles.cardDescription}>{item.selfDescrizione}</Text>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <Text style={styles.emptyText}>Nessun percorso consigliato</Text>
+        )}
+      </View>
+
+      <BarraSezioni />
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    paddingHorizontal: 20,
     marginTop: 40,
     backgroundColor: '#fff',
   },
@@ -124,41 +206,68 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 15,
+  },
+  headerButton: {
+    padding: 8,
+  },
+  headerButtonText: {
+    fontSize: 16,
+    color: '#007AFF',
+    fontWeight: '600',
   },
   title: {
-    fontSize: 28,
+    fontSize: 22,
     fontWeight: 'bold',
   },
-  profileContainer: {
+  profileRow: {
+    flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 25,
   },
-  avatar: {
+  foto: {
     width: 90,
     height: 90,
-    borderRadius: 50,
-    marginBottom: 10,
+    borderRadius: 45,
+    marginRight: 15,
   },
-  username: {
+  profileInfo: {
+    flex: 1,
+  },
+  usernameLarge: {
+    fontSize: 24,
     fontWeight: 'bold',
-    fontSize: 16,
+    marginBottom: 6,
   },
-  interests: {
-    color: '#888',
+  interestsDescription: {
+    fontSize: 14,
+    color: '#666',
   },
-  pointsContainer: {
+  pointsCircleContainer: {
     alignItems: 'center',
     marginBottom: 30,
   },
-  plant: {
-    width: 50,
-    height: 50,
+  pointsCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 6,
+    borderColor: '#4CAF50',
+    justifyContent: 'center',
+    alignItems: 'center',
+    position: 'relative',
+  },
+  plantCenterImage: {
+    width: 60,
+    height: 60,
     marginBottom: 5,
   },
-  points: {
-    fontSize: 16,
+  pointsText: {
+    position: 'absolute',
+    bottom: 8,
     fontWeight: 'bold',
+    fontSize: 16,
+    color: '#333',
   },
   section: {
     marginBottom: 25,
@@ -170,41 +279,28 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#f5f5f5',
-    padding: 15,
+    padding: 12,
     borderRadius: 10,
     marginBottom: 10,
   },
   cardTitle: {
     fontWeight: 'bold',
     fontSize: 16,
+    marginBottom: 4,
   },
   cardDescription: {
-    color: '#666',
+    fontSize: 14,
+    color: '#555',
+  },
+  emptyText: {
+    fontStyle: 'italic',
+    color: '#999',
+  },
+  stato: {
+    marginTop: 6,
+    fontWeight: 'bold',
   },
   refused: {
     color: 'red',
-    fontWeight: 'bold',
-    marginTop: 5,
-  },
-
-  loginContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#fff',
-  },
-  loginTitle: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    alignSelf: 'center',
-  },
-  input: {
-    height: 40,
-    borderColor: '#ccc',
-    borderWidth: 1,
-    marginBottom: 15,
-    paddingHorizontal: 10,
-    borderRadius: 5,
   },
 });

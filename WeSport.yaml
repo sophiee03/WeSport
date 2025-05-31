@@ -823,6 +823,10 @@ components:
           description: "URL della foto del profilo"
         selfdescription:
           type: string
+        percorsi:
+          type: array
+          items:
+            $ref: '#/components/schemas/percorso'
         segnalazioni:
           type: array
           items:
