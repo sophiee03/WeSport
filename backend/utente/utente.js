@@ -19,11 +19,14 @@ module.exports = router;
 /profiloUtente:
   get:
     summary: Ottiene il profilo utente
+/registrazioneUtente:
+  get:
+    summary: resitrazione profilo utente
 =======
 /registrazioneUtente:
   get:
     summary: resitrazione profilo utente
->>>>>>> feature/registrazione
+>>>>>>> 97f55e8 (modifica  yaml):paths/utenti.yaml
     tags:
       - Utente
     security:
@@ -34,12 +37,7 @@ module.exports = router;
         content:
           application/json:
             schema:
-              oneOf:
-                - $ref: '../components/schemas/utenteregistrato.yaml'
                 - $ref: '../components/schemas/utente.yaml'
-      '401':
-        description: Token mancante o non valido
-      
       '401':
         description: Utente non autorizzato (non registrato o token mancante)
         content:
