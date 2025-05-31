@@ -8,6 +8,7 @@ import ProfiloUtente from '../screens/ProfiloUtente';
 import ListaAnnunci from '../screens/ListaAnnunci';
 import visualizzaAnnuncio from '../screens/visualizzaAnnuncio';
 import creazioneAnnuncio from '../screens/creazioneAnnuncio';
+import chat from '../screens/chat';
 import Avvisi from '../screens/Avvisi';
 import ListaPercorsi from '../screens/ListaPercorsi';
 import VisualizzazionePercorso from '../screens/visualizzazionePercorso';
@@ -24,6 +25,7 @@ const AppNavigation = () => {
       <Stack.Screen name="ListaAnnunci" component={ListaAnnunci} />
       <Stack.Screen name="visualizzaAnnuncio" component={visualizzaAnnuncio} />
       <Stack.Screen name="creazioneAnnuncio" component={creazioneAnnuncio} />
+      <Stack.Screen name="chat" component={chat} />
       <Stack.Screen name="Avvisi" component={Avvisi} />
       <Stack.Screen name="ListaPercorsi" component={ListaPercorsi} />
       <Stack.Screen name="VisualizzazionePercorso" component={VisualizzazionePercorso} /> 
