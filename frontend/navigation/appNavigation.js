@@ -1,10 +1,13 @@
 //per il routing
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import visualizzazioneAS from '../screens/visualizzazioneAS'; // importa i file JS
+// importa i file JS
+import visualizzazioneAS from '../screens/visualizzazioneAS'; 
 import HomePage from '../screens/HomePage';
 import ProfiloUtente from '../screens/ProfiloUtente';
-import Annunci from '../screens/Annunci';
+import ListaAnnunci from '../screens/ListaAnnunci';
+import visualizzaAnnuncio from '../screens/visualizzaAnnuncio';
+import creazioneAnnuncio from '../screens/creazioneAnnuncio';
 import Avvisi from '../screens/Avvisi';
 import ListaPercorsi from '../screens/ListaPercorsi';
 import VisualizzazionePercorso from '../screens/visualizzazionePercorso';
@@ -18,7 +21,9 @@ const AppNavigation = () => {
       <Stack.Screen name="Home" component={HomePage} />
       <Stack.Screen name="AreeSportive" component={visualizzazioneAS} />
       <Stack.Screen name="ProfiloUtente" component={ProfiloUtente} />
-      <Stack.Screen name="Annunci" component={Annunci} />
+      <Stack.Screen name="ListaAnnunci" component={ListaAnnunci} />
+      <Stack.Screen name="visualizzaAnnuncio" component={visualizzaAnnuncio} />
+      <Stack.Screen name="creazioneAnnuncio" component={creazioneAnnuncio} />
       <Stack.Screen name="Avvisi" component={Avvisi} />
       <Stack.Screen name="ListaPercorsi" component={ListaPercorsi} />
       <Stack.Screen name="VisualizzazionePercorso" component={VisualizzazionePercorso} /> 

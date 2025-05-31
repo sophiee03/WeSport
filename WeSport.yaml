@@ -664,7 +664,7 @@ components:
           type: integer
         categoria: 
           $ref: '#/components/schemas/sport'
-        description:
+        descrizione:
           type: string
         dataOrario:
           type: string

@@ -1,42 +1,48 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
-import { getHeaders } from 'apiUtils';
-import barraSezioni from './barraSezioni';
+import { getHeaders, isLoggedIn, getnomeutente } from '../utils/apiUtils';
+import BarraSezioni from '../components/barraSezioni';
 
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
-export default function VisualizzaAnnuncio({ isLoggedIn, userId }) {
+export default function VisualizzaAnnuncio() {
   const [annuncio, setAnnuncio] = useState(null);
   const [isIscritto, setIsIscritto] = useState(false);
+  const [isLoggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
+
   const route = useRoute();
   const navigation = useNavigation();
   const { idAnnuncio } = route.params;
 
   const caricaAnnuncio = async () => {
     try {
-      const res = await fetch(`${BASE_URL}/${idAnnuncio}`, {
-        headers: getHeaders(),
-      });
+      const res = await fetch(`${BASE_URL}/${idAnnuncio}`);
       if (!res.ok) throw new Error('Errore caricamento annuncio');
       const data = await res.json();
       setAnnuncio(data);
 
       // verifica se utente è iscritto
       const iscritti = data.iscritti || [];
-      const isUserIscritto = iscritti.includes(userId);
+      const utente = await getnomeutente();
+      const isUserIscritto = iscritti.includes(utente);
       setIsIscritto(isUserIscritto);
       setLoading(false);
     } catch (err) {
       console.error(err);
-      Alert.alert('Errore', 'Errore nel caricamento dell\'annuncio');
+      Alert.alert('Errore', 'Errore nel caricamento');
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    caricaAnnuncio();
+    const init = async () => {
+      const logged = await isLoggedIn();
+      setLoggedIn(logged);
+      await caricaAnnuncio();
+    };
+    init();
   }, []);
 
   const gestisciIscrizione = async (azione) => {
@@ -132,7 +138,7 @@ export default function VisualizzaAnnuncio({ isLoggedIn, userId }) {
         disabled={!isLoggedIn || !isIscritto}
       />
 
-      <barraSezioni />
+      <BarraSezioni />
     </View>
   );
 }

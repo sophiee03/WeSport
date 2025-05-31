@@ -1,35 +1,17 @@
-import React, { useState, useContext } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  Alert,
-  StyleSheet,
-  TouchableOpacity,
-  Platform,
-} from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Picker, Slider, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { AuthContext } from '../contexts/AuthContext';
-import { getHeaders } from 'apiUtils';
-import barraSezioni from './barraSezioni';
+import { isLoggedIn, getnomeutente } from '../utils/apiUtils'; 
+import BarraSezioni from '../components/barraSezioni';
 
-const categorie = [
-  'calcio',
-  'basket',
-  'corsa',
-  'padel',
-  'tennis',
-  'trekking',
-  'pallavolo/beachvolley',
-  'nuoto',
-];
+const BASE_URL = 'http://api.weSport.it/v1/Annunci';
+const categorie = ['Tutti', 'calcio', 'basket', 'corsa', 'padel', 'tennis', 'trekking', 'pallavolo/beachvolley', 'nuoto'];
 
 const MAX_PERSONE = 15;
 
 export default function CreaAnnuncio() {
-  const { user, isLoggedIn } = useContext(AuthContext);
+  const [loggedIn, setLoggedIn] = useState(false);
   const navigation = useNavigation();
 
   const [categoria, setCategoria] = useState(null);
@@ -76,15 +58,15 @@ export default function CreaAnnuncio() {
   };
 
   const creaAnnuncio = async () => {
-    if (!isLoggedIn) {
-      Alert.alert('Errore', 'Devi essere loggato per creare un annuncio');
-      navigation.navigate('LoginUI');
-      return;
-    }
-    if (!validaCampi()) return;
-
-    const nuovoAnnuncio = {
-      idCapogruppo: user?.username,
+    if (!loggedIn) {
+    Alert.alert('Errore', 'Devi essere loggato per creare un annuncio');
+    navigation.navigate('LoginUI');
+    return;
+  }
+  if (!validaCampi()) return;
+  
+  const nuovoAnnuncio = {
+      idCapogruppo: await getnomeutente(),
       categoria,
       Npersone,
       descrizione,
@@ -93,12 +75,10 @@ export default function CreaAnnuncio() {
     };
 
     try {
-      const res = await fetch('http://api.weSport.it/v1/Annunci', {
+      const headers = await getHeaders();
+      const res = await fetch(BASE_URL, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${user.token}`,
-        },
+        headers: headers,
         body: JSON.stringify(nuovoAnnuncio),
       });
 
@@ -122,29 +102,32 @@ export default function CreaAnnuncio() {
       <Text style={styles.title}>Crea Annuncio</Text>
 
       <Text style={styles.label}>Categoria</Text>
-      {categorie.map((cat) => (
-        <TouchableOpacity
-          key={cat}
-          style={[
-            styles.categoriaButton,
-            categoria === cat && styles.categoriaSelected,
-          ]}
-          onPress={() => setCategoria(cat)}
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={categoria}
+          onValueChange={(itemValue) => setCategoria(itemValue)}
+          mode="dropdown"
         >
-          <Text style={categoria === cat ? styles.textSelected : styles.text}>{cat}</Text>
-        </TouchableOpacity>
-      ))}
+          <Picker.Item label="Seleziona una categoria" value={null} />
+          {categorie.map((cat) => (
+            <Picker.Item key={cat} label={cat} value={cat} />
+          ))}
+        </Picker>
+      </View>
 
-      <Text style={styles.label}>Numero persone (max {MAX_PERSONE})</Text>
-      <TextInput
-        style={styles.input}
-        keyboardType="number-pad"
-        value={Npersone.toString()}
-        onChangeText={(text) => {
-          const num = parseInt(text) || 1;
-          if (num <= MAX_PERSONE) setNpersone(num);
-        }}
+
+      <Text style={styles.label}>Numero persone: {Npersone}</Text>
+      <Slider
+        style={{ width: '100%', height: 40 }}
+        minimumValue={1}
+        maximumValue={MAX_PERSONE}
+        step={1}
+        value={Npersone}
+        onValueChange={(value) => setNpersone(value)}
+        minimumTrackTintColor="#3498db"
+        maximumTrackTintColor="#ccc"
       />
+
 
       <Text style={styles.label}>Descrizione</Text>
       <TextInput
@@ -188,7 +171,7 @@ export default function CreaAnnuncio() {
         <Button title="CREA" onPress={creaAnnuncio} />
       </View>
 
-      <barraSezioni />
+      <BarraSezioni />
     </View>
   );
 }
@@ -203,6 +186,12 @@ const styles = StyleSheet.create({
     borderColor: '#888',
     padding: 8,
     borderRadius: 5,
+  },
+  pickerContainer: {
+    borderWidth: 1,
+    borderColor: '#888',
+    borderRadius: 5,
+    marginBottom: 10,
   },
   categoriaButton: {
     paddingVertical: 8,

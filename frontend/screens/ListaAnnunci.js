@@ -1,38 +1,32 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Picker} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-//import { AuthContext } from './AuthContext';
-import barraSezioni from './barraSezioni';
-import { getHeaders } from 'apiUtils';
+import BarraSezioni from '../components/barraSezioni';
+import { isLoggedIn } from '../utils/apiUtils'; 
 
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
-const categorie = [
-  'Tutti',
-  'calcio',
-  'basket',
-  'corsa',
-  'padel',
-  'tennis',
-  'trekking',
-  'pallavolo/beachvolley',
-  'nuoto',
-];
+const categorie = ['Tutti', 'calcio', 'basket', 'corsa', 'padel', 'tennis', 'trekking', 'pallavolo/beachvolley', 'nuoto'];
 
 export default function AnnunciScreen() {
   const [annunci, setAnnunci] = useState([]);
-  const [categoriaFiltro, setCategoriaFiltro] = useState('Tutti');
+  const [categoria, setCategoriaFiltro] = useState('Tutti');
+  const [loggedIn, setLoggedIn] = useState(false);
   const navigation = useNavigation();
-  //const { getHeaders } = useContext(AuthContext);
 
   useEffect(() => {
-    caricaAnnunci();
+    const init = async () => {
+      const logged = await isLoggedIn();
+      setLoggedIn(logged);
+      caricaAnnunci();
+    };
+    init();
   }, []);
+
 
   const caricaAnnunci = async () => {
     try {
-      const headers = await getHeaders();
-      const res = await fetch(BASE_URL, { headers });
+      const res = await fetch(BASE_URL);
       if (!res.ok) throw new Error('Errore caricamento annunci');
       const data = await res.json();
       setAnnunci(data);
@@ -41,7 +35,7 @@ export default function AnnunciScreen() {
     }
   };
 
-  const filtrati = categorie === 'Tutti'
+  const filtrati = categoria === 'Tutti'
     ? annunci
     : annunci.filter(a => a.categoria === categoria);
 
@@ -60,7 +54,7 @@ export default function AnnunciScreen() {
         </View>
         <View style={styles.rigaBottom}>
           <Text numberOfLines={2} style={styles.descrizione}>
-            {item.description}
+            {item.descrizione}
           </Text>
           <Text style={styles.nPersone}>
             {numIscritti}/{item.Npersone}
@@ -75,8 +69,16 @@ export default function AnnunciScreen() {
       <View style={styles.header}>
         <Text style={styles.title}>Annunci</Text>
         <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => navigation.navigate('CreaAnnuncio')}
+          style={[styles.addButton, !loggedIn && styles.addButtonDisabled]}
+          onPress={() => {
+            if (!loggedIn) {
+              Alert.alert('Accesso richiesto', 'Devi essere loggato per creare un annuncio');
+              navigation.navigate('LoginUI');
+              return;
+            }
+            navigation.navigate('CreaAnnuncio');
+          }}
+          disabled={!loggedIn}
         >
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
@@ -84,11 +86,11 @@ export default function AnnunciScreen() {
 
       <View style={styles.filtroContainer}>
         <Picker
-          selectedValue={categoriaFiltro}
+          selectedValue={categoria}
           onValueChange={setCategoriaFiltro}
           style={styles.picker}
         >
-          {categorieDisponibili.map(cat => (
+          {categorie.map(cat => (
             <Picker.Item key={cat} label={cat} value={cat} />
           ))}
         </Picker>
@@ -101,7 +103,7 @@ export default function AnnunciScreen() {
         contentContainerStyle={{ paddingBottom: 80 }}
       />
 
-      <barraSezioni />
+      <BarraSezioni />
     </View>
   );
 }
