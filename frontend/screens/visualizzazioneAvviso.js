@@ -54,6 +54,8 @@ export default function VisualizzaAvviso() {
 
       <Text style={styles.testoLabel}>Descrizione:</Text>
       <Text style={styles.testo}>{avviso.testo}</Text>
+
+      <BarraSezioni />
     </View>
   );
 }
