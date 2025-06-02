@@ -3,9 +3,9 @@ import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
 
 const Segnalazione = () => {
   const [formData, setFormData] = useState({
-    data: '2025-05-25',
-    luogo: 'Canova',
-    descrizione: 'Ramo in mezzo al campo',
+    data: '',
+    luogo: '',
+    descrizione: '',
     stato: 'in attesa',
     idUtente: 'utente123',
   });
