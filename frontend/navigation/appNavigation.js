@@ -15,6 +15,7 @@ import ListaPercorsi from '../screens/ListaPercorsi';
 import VisualizzazionePercorso from '../screens/visualizzazionePercorso';
 import CreazionePercorso from '../screens/creazionePercorso';
 import visualizzazioneAvviso from '../screens/visualizzazioneAvviso';
+import visuaSegnalazioni from '../screens/visuaSeganalazioni';
 
 
 const Stack = createNativeStackNavigator();
@@ -34,7 +35,9 @@ const AppNavigation = () => {
       <Stack.Screen name="visualizzazioneAvviso" component={visualizzazioneAvviso} />
       <Stack.Screen name="ListaPercorsi" component={ListaPercorsi} />
       <Stack.Screen name="VisualizzazionePercorso" component={VisualizzazionePercorso} /> 
+      <Stack.Screen name="visuaSegnalazioni" component={visuaSegnalazioni} />
       <Stack.Screen name="creazionePercorso" component={CreazionePercorso} /> 
+      
     </Stack.Navigator>
   );
 };

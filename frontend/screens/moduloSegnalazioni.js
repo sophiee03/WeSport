@@ -69,6 +69,7 @@ const Segnalazione = async () => {
     }
   };
 
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Invia una Segnalazione</Text>
