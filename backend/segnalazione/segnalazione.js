@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const segnalazione = require('../models/segnalazione');
+const nodemailer = require('nodemailer');
 
 /** COMMENTI SWAGGER
  * @openapi
@@ -57,7 +58,37 @@ router.post('/new', async (req, res) => {
   try {
     const newsegnalazione = new segnalazione(req.body); 
     const savedsegnalazione = await newsegnalazione.save(); 
+    
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      utente: {
+        user: 'giacomorossi@gmail.com',
+        pass: 'password123' 
+      }
+    });
+
+    const mailOptions = {
+      from: 'giacomorossi@gmail.com',
+      to: 'evelin.begher@gmail.com.com',
+      subject: 'Nuova Segnalazione ricevuta',
+      text: `Nuova segnalazione:
+        Data: ${req.body.data}
+        Luogo: ${req.body.luogo}
+        Descrizione: ${req.body.descrizione}
+        Stato: ${req.body.stato}
+        ID Utente: ${req.body.idUtente}`
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        console.error('Errore invio email:', error);
+      } else {
+        console.log('Email inviata:', info.response);
+      }
+    });
+
     res.status(201).json(savedsegnalazione); 
+    
   } catch (err) {
     res.status(400).json({ errore: 'Errore nella creazione' });
   }
