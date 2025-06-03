@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform, Keyboard, SafeAreaView} from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { getHeaders, getnomeutente } from '../utils/apiUtils';
+import { getHeaders, getnomeutente } from '../utils/apiutils';
 import BarraSezioni from '../components/barraSezioni';
 import Messaggio from '../components/messaggio.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
