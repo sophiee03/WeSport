@@ -6,6 +6,7 @@ import BarraSezioni from '../components/barraSezioni';
 import Messaggio from '../components/messaggio.js';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
+
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
 export default function ChatScreen() {
