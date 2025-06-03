@@ -46,6 +46,14 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
   },
+  Button: {
+    backgroundColor: '#007bff',
+    borderRadius: 20,
+    width: 36,
+    height: 36,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
