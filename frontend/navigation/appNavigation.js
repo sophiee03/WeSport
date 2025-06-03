@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator();
 const AppNavigation = () => {
   return (
     <Stack.Navigator initialRouteName="HomePage">
-      <Stack.Screen name="Home" component={HomePage} />
+      <Stack.Screen name="HomePage" component={HomePage} />
       <Stack.Screen name="LoginUI" component={LoginUI} />
       <Stack.Screen name="AreeSportive" component={visualizzazioneAS} />
       <Stack.Screen name="ProfiloUtente" component={ProfiloUtente} />
