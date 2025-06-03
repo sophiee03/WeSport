@@ -17,6 +17,7 @@ import CreazionePercorso from '../screens/creazionePercorso';
 import visualizzazioneAvviso from '../screens/visualizzazioneAvviso';
 import visuaSegnalazioni from '../screens/visuaSegnalazioni';
 import moduloSegnalazioni from '../screens/moduloSegnalazioni';
+import visuaAreaSportiva from '../screens/visuaAreaSportiva';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ const AppNavigation = () => {
       <Stack.Screen name="visuaSegnalazioni" component={visuaSegnalazioni} />
       <Stack.Screen name="creazionePercorso" component={CreazionePercorso} /> 
       <Stack.Screen name="moduloSegnalazioni" component={moduloSegnalazioni} />       
+      <Stack.Screen name="visuaAreaSportiva" component={visuaAreaSportiva} />       
     </Stack.Navigator>
   );
 };

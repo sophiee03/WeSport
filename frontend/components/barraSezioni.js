@@ -10,7 +10,7 @@ const BarraSezioni = () => {
   const buttons = [
     { icon: 'home-outline', screen: 'HomePage' },
     { icon: 'chatbubble-ellipses-outline', screen: 'ListaAnnunci' },
-    { icon: 'notifications-outline', screen: 'Avvisi' },
+    { icon: 'notifications-outline', screen: 'ListaAvvisi' },
   ];
 
   return (

@@ -1,16 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native'; 
+import BarraSezioni from '../components/barraSezioni';
+
+const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/';
 
 export default function CercaAreeSportive() {
   const [datiDB, setDatiDB] = useState([]);
   const [query, setQuery] = useState('');
   const [tipoFiltro, setTipoFiltro] = useState('Tutti');
   const [risultati, setRisultati] = useState([]);
+  const navigation = useNavigation();
 
   useEffect(() => {
-    fetch('https://private-44d07-wesport2.apiary-mock.com')
-      .then((res) => res.json())
+    fetch(`${BASE_URL}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Errore nella risposta");
+        return res.json();
+      })
       .then((data) => {
         setDatiDB(data);
         setRisultati(data);
@@ -76,21 +84,30 @@ export default function CercaAreeSportive() {
       ]}
       onPress={() => setTipoFiltro(tipo)}
     >
-      <Text style={styles.filtroTesto}>{tipo}</Text>
+      <Text style={[styles.filtroTesto, tipoFiltro !== tipo && {color: '#000'}]}>{tipo}</Text>
     </TouchableOpacity>
   );
 
   const renderItem = ({ item }) => (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate('visuaAreaSportiva', { areaSportiva: item })}
+    >
       <Text style={styles.nome}>{item.nome}</Text>
       <Text>Tipo: {item.tipo}</Text>
       <Text>Sport: {item.sport}</Text>
       <Text>Indirizzo: {item.indirizzo}</Text>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
     <View style={styles.container}>
+      <View style={{ marginTop: 20 }}>
+                  <Button
+                  title="Torna indietro"
+                  onPress={() => navigation.goBack()}
+                  />
+              </View>
       <Text style={styles.titolo}>Cerca Aree Sportive</Text>
       <TextInput
         placeholder="Cerca per nome o sport..."
@@ -113,6 +130,7 @@ export default function CercaAreeSportive() {
           </Text>
         }
       />
+      <BarraSezioni/>
     </View>
   );
 }
@@ -169,12 +187,5 @@ const styles = StyleSheet.create({
   filtroTesto: {
     color: '#fff',
     fontWeight: 'bold',
-  },
-  sezioneExtra: {
-    marginTop: 8,
-  },
-  sezioneTitolo: {
-    fontWeight: 'bold',
-    marginTop: 6,
   },
 });
