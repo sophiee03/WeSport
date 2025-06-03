@@ -27,20 +27,14 @@ const StatusBadge = ({ stato }) => {
   );
 };
 
-const datiMock = [
-  { id: '1', luogo: 'Prco Madonna Bianca', descrizione: 'Panchina rotta', stato: 'accettato', data: '20-05-2025' },
-  { id: '2', luogo: 'Canova', descrizione: 'Lampione spento', stato: 'in attesa', data: '23-05-2025' },
-  { id: '3', luogo: 'Gardolo', descrizione: 'Spazzatura non raccolta', stato: 'rifiutato', data: '22-05-2025' },
-];
-
-const ListaSegnalazioni = () => {
+const ListaSegnalazioni = async () => {
   const [segnalazioni, setSegnalazioni] = useState([]);
   const navigation = useNavigation();
+  const res = await fetch(`${BASE_URL}/${segnalazione}`);
 
-  /*useEffect(() => {
-    // TODO: sostituire con fetch reale
-    setSegnalazioni(datiMock);
-  }, []);*/
+  useEffect(() => {
+    setSegnalazioni();
+  }, []);
 
   const filtrate = (stato) => segnalazioni.filter(s => s.stato === stato);
 
@@ -87,8 +81,10 @@ const ListaSegnalazioni = () => {
         ListEmptyComponent={<Text style={styles.empty}>Nessuna segnalazione rifiutata</Text>}
       />
     </View>
+
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -145,3 +141,4 @@ const styles = StyleSheet.create({
 });
 
 export default ListaSegnalazioni;
+
