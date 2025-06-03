@@ -1,27 +1,59 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { getnomeutente } from '../utils/apiutils'; 
+import BarraSezioni from '../components/barraSezioni';
+import * as ImagePicker from 'expo-image-picker';
 
-const Segnalazione = () => {
+const Segnalazione = async () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigation = useNavigation();
+  const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({
     data: '',
     luogo: '',
     descrizione: '',
     stato: 'in attesa',
-    idUtente: 'utente123',
+    nomeutente: await getnomeutente(),
+    immagine: '',
   });
 
   const handleChange = (name, value) => {
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
+  const pickImage = async () => {
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert('Permesso necessario', 'Permesso per accedere alla galleria è richiesto!');
+        return;
+      }
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        quality: 0.7,
+        base64: true,
+      });
+      if (!result.cancelled) {
+        setImage(result);
+      }
+    };
+
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://api.weSport.it/segnalazione/new', {
+      const response = await fetch('http://api.weSport.it/segnalazione', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
+        if (image) {
+        // Invio immagine con nome, tipo e uri
+        formData.append('foto', {
+          uri: image.uri,
+          name: 'foto.jpg',
+          type: 'image/jpeg',
+        });
+      }
       });
 
       if (response.ok) {
@@ -66,7 +98,13 @@ const Segnalazione = () => {
         multiline
       />
 
+      <Button title="Scegli foto" onPress={pickImage} />
+      {image && <Image source={{ uri: image.uri }} style={styles.imagePreview} />}
+
       <Button title="Invia" onPress={handleSubmit} color="#1E40AF" />
+
+      <BarraSezioni />
+
     </View>
   );
 };
@@ -96,6 +134,12 @@ const styles = StyleSheet.create({
     padding: 10,
     fontSize: 16,
     backgroundColor: '#F9FAFB',
+  },
+  imagePreview: {
+    marginTop: 10,
+    width: '100%',
+    height: 200,
+    resizeMode: 'contain',
   },
 });
 
