@@ -910,5 +910,3 @@ components:
       required:
         - token
         - expiresIn
-
-        
