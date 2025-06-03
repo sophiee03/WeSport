@@ -82,6 +82,21 @@ export default function AnnunciScreen() {
         >
           <Text style={styles.addButtonText}>+</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.addButton, !loggedIn && styles.addButtonDisabled]}
+          onPress={async () => {
+            const nomeutente = await getnomeutente();
+            if (!nomeutente) {
+              Alert.alert('Errore', 'Impossibile recuperare il nome utente');
+              return;
+            }
+            const miei = annunci.filter(a => a.idCapogruppo === nomeutente);
+            setCategoriaFiltro('Tutti'); // resetta eventuali altri filtri
+            setAnnunci(miei);
+          }}
+        >
+          <Text style={styles.myAdsButtonText}>I miei annunci</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={styles.filtroContainer}>
