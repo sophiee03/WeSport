@@ -1,61 +1,104 @@
-import React, { useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
-import * as AuthSession from 'expo-auth-session';
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
-const CLIENT_ID = 'TUO_CLIENT_ID_GOOGLE'; // Sostituisci con il tuo Client ID da fare da console.cloud.google.com
-const REDIRECT_URI = AuthSession.makeRedirectUri();
+const BASE_URL = 'http://api.weSport.it/v1/auth';
 
-export default function LoginScreen() {
-  const discovery = {
-    authorizationEndpoint: 'https://accounts.google.com/o/oauth2/v2/auth',
-    tokenEndpoint: 'https://oauth2.googleapis.com/token',
-    revocationEndpoint: 'https://oauth2.googleapis.com/revoke',
-  };
+export default function LoginRegisterScreen() {
+  const [nomeutente, setNomeutente] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [tipo, setTipo] = useState('');
 
-  const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    {
-      clientId: CLIENT_ID,
-      redirectUri: REDIRECT_URI,
-      scopes: ['openid', 'profile', 'email'],
-      responseType: 'token',
-    },
-    discovery
-  );
 
-useEffect(() => {
-  if (response?.type === 'success') {
-    const { access_token } = response.params;
+  const handleSubmit = async () => {
+  if (!nomeutente || !password || (!isLogin && (!email || !tipo))) {
+    Alert.alert('Errore', 'Compila tutti i campi obbligatori');
+    return;
+  }
 
-    // Chiedi al backend se è già registrato
-    fetch(`${BASE_URL}/check-google-user`, {
+  const endpoint = isLogin ? 'login' : 'register';
+
+  const body = isLogin
+    ? { nomeutente, password }
+    : { nomeutente, password, email, tipo };
+
+  try {
+    const res = await fetch(`${BASE_URL}/${endpoint}`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ token: access_token }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.exists) {
-          navigation.navigate('Home'); // o Profile
-        } else {
-          navigation.navigate('UsernameScreen', { token: access_token });
-        }
-      });
-  }
-}, [response]);
+      body: JSON.stringify(body),
+    });
 
+    const data = await res.json();
+
+    if (!res.ok) throw new Error(data.message || 'Errore');
+
+    await AsyncStorage.setItem('token', data.token);
+    await AsyncStorage.setItem('nomeutente', data.nomeutente);
+
+    navigation.navigate('Home');
+  } catch (error) {
+    Alert.alert('Errore', error.message || 'Errore inatteso');
+  }
+};
 
   return (
     <View style={styles.container}>
-      <View style={styles.card}>
-        <Text style={styles.title}>Accedi a WeSport</Text>
-        <TouchableOpacity
-          style={styles.button}
-          disabled={!request}
-          onPress={() => promptAsync()}
-        >
-          <Text style={styles.buttonText}>Accedi con Google</Text>
-        </TouchableOpacity>
-      </View>
+      <Text style={styles.title}>
+        {isLogin ? 'Login' : 'Registrazione'}
+      </Text>
+
+      <TextInput
+        placeholder="Nome utente"
+        value={nomeutente}
+        onChangeText={setNomeutente}
+        style={styles.input}
+        autoCapitalize="none"
+      />
+      <TextInput
+        placeholder="Password"
+        value={password}
+        onChangeText={setPassword}
+        style={styles.input}
+        secureTextEntry
+      />
+
+      {!isLogin && (
+        <>
+          <TextInput
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            style={styles.input}
+            autoCapitalize="none"
+            keyboardType="email-address"
+          />
+          <TextInput
+            placeholder="Tipo (es. atleta, coach)"
+            value={tipo}
+            onChangeText={setTipo}
+            style={styles.input}
+          />
+        </>
+      )}
+
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Text style={styles.buttonText}>
+          {isLogin ? 'Accedi' : 'Registrati'}
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity onPress={() => setIsLogin(!isLogin)}>
+        <Text style={styles.switchText}>
+          {isLogin
+            ? "Non hai un account? Registrati"
+            : "Hai già un account? Accedi"}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -63,39 +106,39 @@ useEffect(() => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F3F4F6',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: 20,
-  },
-  card: {
-    backgroundColor: '#fff',
     padding: 24,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOpacity: 0.1,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
-    width: '100%',
-    maxWidth: 360,
-    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#F3F4F6',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 16,
+    marginBottom: 24,
+    textAlign: 'center',
+    color: '#1D4ED8',
+  },
+  input: {
+    backgroundColor: '#fff',
+    padding: 12,
+    marginBottom: 12,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
   },
   button: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#1D4ED8',
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    borderRadius: 30,
+    paddingVertical: 12,
+    borderRadius: 8,
+    marginTop: 8,
   },
   buttonText: {
     color: '#fff',
+    textAlign: 'center',
     fontWeight: 'bold',
+  },
+  switchText: {
+    marginTop: 16,
+    textAlign: 'center',
+    color: '#555',
   },
 });

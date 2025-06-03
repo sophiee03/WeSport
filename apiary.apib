@@ -1,10 +1,35 @@
-FORMAT: 1A
-HOST: https://api.wesport.it
-
 # WeSport API
 
 ##UTENTE 
-### profilo utente
+## Profilo Utente [GET /api/profile]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + nomeutente: lucaverdi03 (string) - nome utente
+        + email: lucaverdi03@gmail.com (string) - email utente
+        + tipo: registrato (string) - tipologia di utente
+        + punti: 20 (number) - punti totali accumulati
+        + fotoprofilo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQhGqmwotiLoQeHHhOG8tiIOUs-gJOKXL98pw&s (string) - URL della foto del profilo
+        + selfdescription: amante della natura e della bici (string) - descrizione personale
+        + segnalazioni: (array) - lista di segnalazioni effettuate dall'utente
+            + (object)
+                + id: 701 (number) - ID segnalazione
+                + titolo: "Illuminazione parco spenta" (string)
+                + stato: "in attesa" (string)
+        + annunci: (array) - lista degli annunci creati dall'utente
+            + (object)
+                + id: 123 (number) - ID annuncio
+                + titolo: "Partita di calcetto" (string)
+                + data: "2025-06-10T10:00:00Z" (string, date-time)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
 ####info profilo UR [GET /api/profile]
 + Request (application/json)
     + Headers
@@ -101,32 +126,268 @@ HOST: https://api.wesport.it
     + Attributes (object)
         + message:  "utente non trovato" (string)
 
+# ANNUNCI
 
-##ANNUNCI 
-###lista annunci
-###chat annunci
-###creazione nuovo annuncio
+## Lista Annunci [GET /api/annunci]
++ Request
+    + Headers
 
-##AVVISI
-###lista avvisi
-###nuovo avviso
+            Authorization: Bearer {token}
 
-##AMMINISTRATORE
-###lato comune
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + id: 123 (number)
+            + titolo: "Partita di calcetto" (string)
+            + descrizione: "Cerchiamo giocatori per partita domenica mattina" (string)
+            + data: "2025-06-10T10:00:00Z" (string, date-time)
+            + luogo: "Campo sportivo Trento" (string)
+            
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
 
-##PERCORSI
-###lista percorsi
-###mappe
-###nuovo percorso
+## Chat Annunci [GET /api/annunci/{id}/chat]
++ Parameters
+    + id (number) - ID annuncio
 
-##GESTIONE AUTENTICAZIONE
++ Request
+    + Headers
 
-##AZIENDA VERIFICATA
-###profilo azienda verificata [POST ]
+            Authorization: Bearer {token}
 
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + messaggio: "Ci sono ancora posti?" (string)
+            + mittente: "marco88" (string)
+            + timestamp: "2025-06-01T15:30:00Z" (string, date-time)
+            
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
 
-##SEGNALAZIONI
-###segnalazione
+## Creazione Nuovo Annuncio [POST /api/annunci]
++ Request (application/json)
+    + Headers
 
-###lista segnalazioni
-###compilazione modulo segnalazioni
+            Authorization: Bearer {token}
+
+    + Attributes (object)
+        + titolo: "Partita di calcetto" (string, required)
+        + descrizione: "Cerchiamo giocatori per partita domenica mattina" (string, required)
+        + data: "2025-06-10T10:00:00Z" (string, date-time, required)
+        + luogo: "Campo sportivo Trento" (string, required)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + id: 124 (number)
+        + message: "Annuncio creato con successo" (string)
+        
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+# AVVISI
+
+## Lista Avvisi [GET /api/avvisi]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + id: 101 (number)
+            + titolo: "Chiusura parco" (string)
+            + descrizione: "Il parco centrale sarà chiuso per manutenzione il 5 giugno" (string)
+            + data: "2025-06-05T00:00:00Z" (string, date-time)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+## Nuovo Avviso [POST /api/avvisi]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer {token}
+
+    + Attributes (object)
+        + titolo: "Chiusura parco" (string, required)
+        + descrizione: "Il parco centrale sarà chiuso per manutenzione il 5 giugno" (string, required)
+        + data: "2025-06-05T00:00:00Z" (string, date-time, required)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + id: 102 (number)
+        + message: "Avviso creato con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+# AMMINISTRATORE
+
+## Lato Comune [GET /api/amministratore/comune]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + datiComune: "Dati e statistiche del comune" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+# PERCORSI
+
+## Lista Percorsi [GET /api/percorsi]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + id: 301 (number)
+            + nome: "Percorso cicloescursionistico 1" (string)
+            + lunghezza: 12.5 (number) - km
+            + difficolta: "media" (string)
+            
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+## Mappe Percorsi [GET /api/percorsi/mappe]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + idPercorso: 301 (number)
+            + mappaUrl: "https://maps.example.com/percorsi/301.png" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+## Nuovo Percorso [POST /api/percorsi]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer {token}
+
+    + Attributes (object)
+        + nome: "Percorso cicloescursionistico 2" (string, required)
+        + lunghezza: 8.0 (number, required)
+        + difficolta: "bassa" (string, required)
+        + descrizione: "Percorso facile per famiglie" (string, optional)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + id: 302 (number)
+        + message: "Percorso creato con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+# GESTIONE AUTENTICAZIONE
+
+## Login [POST /api/auth/login]
++ Request (application/json)
+    + Attributes (object)
+        + email: "utente@example.com" (string, required)
+        + password: "password123" (string, required)
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + token: "jwt-token" (string)
+        + message: "Login effettuato con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "Credenziali non valide" (string)
+
+## Logout [POST /api/auth/logout]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (object)
+        + message: "Logout effettuato con successo" (string)
+
+# AZIENDA VERIFICATA
+
+## Profilo Azienda Verificata [POST /api/azienda/verificata]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer {token}
+
+    + Attributes (object)
+        + nomeAzienda: "Sportiva SRL" (string, required)
+        + partitaIVA: "12345678901" (string, required)
+        + indirizzo: "Via Roma 10, Trento" (string, required)
+        + descrizione: "Azienda specializzata in articoli sportivi" (string, optional)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + idAzienda: 501 (number)
+        + message: "Profilo azienda verificata creato con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+# SEGNALAZIONI
+
+## Lista Segnalazioni [GET /api/segnalazioni]
++ Request
+    + Headers
+
+            Authorization: Bearer {token}
+
++ Response 200 (application/json)
+    + Attributes (array)
+        + (object)
+            + id: 701 (number)
+            + titolo: "Illuminazione parco spenta" (string)
+            + descrizione: "Da più giorni manca l’illuminazione nel parco centrale" (string)
+            + stato: "in attesa" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)
+
+## Compilazione Modulo Segnalazioni [POST /api/segnalazioni]
++ Request (application/json)
+    + Headers
+
+            Authorization: Bearer {token}
+
+    + Attributes (object)
+        + titolo: "Illuminazione parco spenta" (string, required)
+        + descrizione: "Da più giorni manca l’illuminazione nel parco centrale" (string, required)
+        + fotoUrl: "https://example.com/foto.jpg" (string, optional)
+        + posizione: "Parco centrale, Trento" (string, optional)
+
++ Response 201 (application/json)
+    + Attributes (object)
+        + id: 702 (number)
+        + message: "Segnalazione inviata con successo" (string)
+
++ Response 401 (application/json)
+    + Attributes (object)
+        + message: "utente non autorizzato" (string)

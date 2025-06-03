@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Picker} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
-import { isLoggedIn } from '../utils/apiUtils'; 
+import { isLoggedIn } from '../utils/apiutils'; 
 
 const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 
@@ -81,6 +81,21 @@ export default function AnnunciScreen() {
           disabled={!loggedIn}
         >
           <Text style={styles.addButtonText}>+</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.addButton, !loggedIn && styles.addButtonDisabled]}
+          onPress={async () => {
+            const nomeutente = await getnomeutente();
+            if (!nomeutente) {
+              Alert.alert('Errore', 'Impossibile recuperare il nome utente');
+              return;
+            }
+            const miei = annunci.filter(a => a.idCapogruppo === nomeutente);
+            setCategoriaFiltro('Tutti'); // resetta eventuali altri filtri
+            setAnnunci(miei);
+          }}
+        >
+          <Text style={styles.myAdsButtonText}>I miei annunci</Text>
         </TouchableOpacity>
       </View>
 

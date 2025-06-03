@@ -97,6 +97,7 @@ export default function ProfiloUtente() {
 
         <Text style={styles.title}>WeSport</Text>
 
+
         <TouchableOpacity onPress={handleLogout} style={styles.headerButton}>
           <Text style={styles.headerButtonText}>Logout</Text>
         </TouchableOpacity>
@@ -133,27 +134,11 @@ export default function ProfiloUtente() {
         </AnimatedCircularProgress>
       </View>
 
-      {/* ANNUNCI */}
-      <View style={styles.section}>
-        <Text style={styles.sectionTitle}>I miei Annunci</Text>
-        {utente.annunci?.length > 0 ? (
-          utente.annunci.map((item) => (
-            <TouchableOpacity
-              key={item.idAnnuncio}
-              style={styles.card}
-              onPress={() => navigation.navigate('visualizzaAnnuncio', { annuncio: item.idAnnuncio })}
-            >
-              <Text style={styles.cardTitle}>{item.categoria}</Text>
-              <Text numberOfLines={2} style={styles.cardDescription}>{item.descrizione}</Text>
-            </TouchableOpacity>
-          ))
-        ) : (
-          <Text style={styles.emptyText}>Nessun annuncio pubblicato</Text>
-        )}
-      </View>
-
       {/* SEGNALAZIONI */}
       <View style={styles.section}>
+        <TouchableOpacity onPress={() => navigation.navigate('moduloSegnalazioni')} style={styles.headerButton}>
+          <Text style={styles.headerButtonText}>CREA SEGNALAZIONE</Text>
+        </TouchableOpacity>
         <Text style={styles.sectionTitle}>Le mie Segnalazioni</Text>
         {utente.segnalazioni?.length > 0 ? (
           utente.segnalazioni.map((item) => (
