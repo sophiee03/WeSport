@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-const FooterNav = () => {
+const barraSezioni = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
