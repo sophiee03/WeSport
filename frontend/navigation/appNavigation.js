@@ -15,7 +15,7 @@ import ListaPercorsi from '../screens/ListaPercorsi';
 import VisualizzazionePercorso from '../screens/visualizzazionePercorso';
 import CreazionePercorso from '../screens/creazionePercorso';
 import visualizzazioneAvviso from '../screens/visualizzazioneAvviso';
-import visuaSegnalazioni from '../screens/visuaSeganalazioni';
+import visuaSegnalazioni from '../screens/visuaSegnalazioni';
 
 
 const Stack = createNativeStackNavigator();
