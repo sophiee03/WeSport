@@ -1,63 +1,28 @@
 const express = require('express');
 const router = express.Router();
-const segnalazione = require('../models/segnalazione');
+const Segnalazione = require('../models/segnalazione');
+const { verifyToken } = require('../auth/auth');
 
-/** COMMENTI SWAGGER
- * @openapi
- * /segnalazione
- *     get:
- *           description: Ottieni tutte le segnalazioni
- *           responses:
- *               '200':
- *               description: Successo
- *               '500':
- *               description: Errore interno
- */
-
-router.get('/', async (req, res) => {
+//GET le mie segnalazioni
+router.get('/utenteregistrato/:nomeutente/segnalazione', verifyToken, async (req, res) => {
   try {
-    const segnalazione = await segnalazione.find();
-    res.json(segnalazione); 
+    const nomeutente = req.user.nomeutente;
+    const segnalazioni = await Segnalazione.find({ nomeutente });
+    res.json(segnalazioni);
   } catch (err) {
     res.status(500).json({ errore: 'Errore nel recupero dei dati' });
   }
 });
 
-/** COMMENTI SWAGGER
- * @openapi
- * /segnalazione/new
- *     post:
- *           summary: Crea una nuova segnalazione
- *           requestBody:
- *             required: true
- *             content:
- *               application/json:
- *                 schema:
- *                   $ref: '#/components/schemas/segnalazione'
- *           responses:
- *             '201':
- *               description: segnalazione creata con successo
- *               content:
- *                 application/json:
- *                   schema:
- *                     $ref: '#/components/schemas/segnalazione'
- *             '400':
- *               description: Errore nella creazione
- *               content:
- *                 application/json:
- *                   schema:
- *                     type: object
- *                     properties:
- *                       errore:
- *                         type: string
- *                         example: Errore nella creazione
-  */
-
-router.post('/new', async (req, res) => {
+//POST creare nuova segnalazione
+router.post('/utenteregistrato/:nomeutente/segnalazione', verifyToken, async (req, res) => {
   try {
-    const newsegnalazione = new segnalazione(req.body); 
-    const savedsegnalazione = await newsegnalazione.save(); 
-    res.status(201).json(savedsegnalazione); 
+     const newSegnalazione = new Segnalazione({
+      ...req.body,
+      userId: req.user.id,
+    });
+    const savedSegnalazione = await newSegnalazione.save();
+    res.status(201).json(savedSegnalazione);
   } catch (err) {
     res.status(400).json({ errore: 'Errore nella creazione' });
   }

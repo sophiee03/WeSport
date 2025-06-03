@@ -1,21 +1,20 @@
 const mongoose = require('mongoose');
 
 const messaggioSchema = new mongoose.Schema({
-
-    data: {
-        type: Date,
-        required: true
-    },
-
-    mittente: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'UtenteRegistrato',
-        required: true,
-        description: "id dell'utente che ha inviato il messaggio"
-    },
-    
-    testo: String
+  mittente: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true,
+  },
+  testo: {
+    type: String,
+    required: true,
+  },
+  data: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  }
 });
 
-const Messaggio = mongoose.model('Messaggio', messaggioSchema);
-module.exports = Messaggio;
+module.exports = mongoose.model('Messaggio', messaggioSchema);

@@ -38,5 +38,4 @@ const areasportivaSchema = new mongoose.Schema({
         - privata
 });
 
-const AreaSportiva = mongoose.model('AreaSportiva', areasportivaSchema);
-module.exports = AreaSportiva;
+module.exports = mongoose.model('AreaSportiva', areasportivaSchema);

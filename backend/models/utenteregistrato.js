@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-
 const utenteregistratoSchema = new mongoose.Schema({
   nomeutente: { 
-    type: String, 
+    type: String,
+    required: true, 
     unique: true 
     },
 
@@ -15,7 +15,7 @@ const utenteregistratoSchema = new mongoose.Schema({
 
   tipo: {
     type: String,
-    enum: ['registrato', 'azienda', 'aziendaVer'], // <-- valori permessi
+    enum: ['utente', 'azienda', 'aziendaVer'],
     required: true
   },
 
@@ -36,11 +36,15 @@ const utenteregistratoSchema = new mongoose.Schema({
     ref: 'Segnalazione'
   },
 
+  percorsi: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Percorso',
+  }],
+
   annunci: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Annuncio'
   }
 });
 
-const UtenteRegistrato = mongoose.model('UtenteRegistrato', utenteregistratoSchema, 'utenteregistrato');
-module.exports = UtenteRegistrato;
+module.exports = mongoose.model('UtenteRegistrato', utenteregistratoSchema);

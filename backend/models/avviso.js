@@ -25,5 +25,4 @@ const avvisoSchema = new mongoose.Schema({
     testo:  String
 });
 
-const Avviso = mongoose.model('Avviso', avvisoSchema, 'avviso');
-module.exports = Avviso;
+module.exports = mongoose.model('Avviso', avvisoSchema, 'avviso');

@@ -29,10 +29,6 @@ const percorsoSchema = new mongoose.Schema({
     numerovoti: int,
     recensione: int,
     selfdescription: String,
-    //mappa?
 });
 
-
-const Percorso = mongoose.model('Percorso', percorsoSchema);
-
-module.exports = Percorso;
+module.exports = mongoose.model('Percorso', percorsoSchema);

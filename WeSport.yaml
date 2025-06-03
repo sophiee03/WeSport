@@ -477,10 +477,10 @@ paths:
                 $ref: '#/components/schemas/avviso'
         '404':
           description: Avviso non trovato
-###########
-  /auth/login:
+
+  /auth/login_reg:
     post:
-      summary: Login utente tramite ID provider 
+      summary: Login utente tramite ID provider
       tags:
         - autenticazione
       requestBody:
@@ -488,18 +488,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '../components/schemas/Login/LoginRequest.yaml'
+              $ref: '#/components/schemas/LoginRequest'
       responses:
         '200':
-          description: Login riuscito
+          description: Login riuscito, restituisce un token JWT
           content:
             application/json:
               schema:
-                $ref: '..//verifytoken.yaml'
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token
         '401':
           description: Credenziali non valide
 
-  /auth/logout:
+  /auth/logout: #solo indicativo (non implementato)
     post:
       summary: Logout dell'utente (utente registrato)
       tags:
@@ -511,8 +515,7 @@ paths:
           description: Logout effettuato con successo
         '401':
           description: Utente non autorizzato
-############
-  
+
   /utenteregistrato/{nomeutente}:
     get:
       summary: Ottiene le informazioni dell'utente (utente registrato)
@@ -674,9 +677,6 @@ components:
           items:
             type: string
           description: "ID degli utenti iscritti all'annuncio"
-        visibilita:
-          type: boolean
-          default: true
       required:
         - idAnnuncio
         - idCapogruppo
@@ -898,17 +898,19 @@ components:
         - data
         - categoria
 
-    verifytoken:
+    LoginRequest:
       type: object
-      properties:
-        token:
-          type: string
-          description: Token JWT per l'autenticazione
-        expiresIn:
-          type: integer
-          description: Durata del token in secondi
       required:
-        - token
-        - expiresIn
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: "password123"
 
         

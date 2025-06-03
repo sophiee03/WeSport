@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  View,
-  Text,
-  TextInput,
-  FlatList,
-  TouchableOpacity,
-  StyleSheet,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TextInput, FlatList, TouchableOpacity, StyleSheet, ScrollView} from 'react-native';
 
 export default function CercaAreeSportive() {
   const [datiDB, setDatiDB] = useState([]);

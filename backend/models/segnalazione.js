@@ -29,11 +29,9 @@ const segnalazioneSchema = new mongoose.Schema({
 
   stato: {
     type: string,
-    enum: ['accettata', 'elaborazione', 'rifiutata'], 
+    enum: ['accettata', 'in elaborazione', 'rifiutata'], 
   }
 
 });
 
-const Segnalazione = mongoose.model('Segnalazione', segnalazioneSchema);
-
-module.exports = Segnalazione;;
+module.exports = mongoose.model('Segnalazione', segnalazioneSchema);

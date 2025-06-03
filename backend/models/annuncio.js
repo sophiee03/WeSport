@@ -32,11 +32,6 @@ const annuncioSchema = new mongoose.Schema({
         description: "ID degli utenti iscritti all'annuncio"
     }],
 
-    visibilita: {
-          type: boolean,
-          default: true
-    }
 });
 
-const Annuncio = mongoose.model('Annuncio', annuncioSchema);
-module.exports = Annuncio;
+module.exports = mongoose.model('Annuncio', annuncioSchema);
