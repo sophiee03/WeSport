@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, Image, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { getnomeutente } from '../utils/apiutils'; 
 import BarraSezioni from '../components/barraSezioni';
 import * as ImagePicker from 'expo-image-picker';
 
 const Segnalazione = async () => {
-  const [loggedIn, setLoggedIn] = useState(false);
   const navigation = useNavigation();
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState({

@@ -1,5 +1,3 @@
-//file principale dell'app
-
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AppNavigation from './navigation/appNavigation';

@@ -9,37 +9,34 @@ const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 export default function VisualizzaAnnuncio() {
   const [annuncio, setAnnuncio] = useState(null);
   const [isIscritto, setIsIscritto] = useState(false);
-  const [isLoggedIn, setLoggedIn] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const route = useRoute();
   const navigation = useNavigation();
   const { idAnnuncio } = route.params;
 
-  const caricaAnnuncio = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/${idAnnuncio}`);
-      if (!res.ok) throw new Error('Errore caricamento annuncio');
-      const data = await res.json();
-      setAnnuncio(data);
-
-      // verifica se utente è iscritto
-      const iscritti = data.iscritti || [];
-      const utente = await getnomeutente();
-      const isUserIscritto = iscritti.includes(utente);
-      setIsIscritto(isUserIscritto);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      Alert.alert('Errore', 'Errore nel caricamento');
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     const init = async () => {
-      const logged = await isLoggedIn();
-      setLoggedIn(logged);
+      setLogged(await isLoggedIn());
+      const caricaAnnuncio = async () => {
+        try {
+          const res = await fetch(`${BASE_URL}/${idAnnuncio}`);
+          if (!res.ok) throw new Error('Errore caricamento annuncio');
+          const data = await res.json();
+          setAnnuncio(data);
+
+          // verifica se utente è iscritto
+          const iscritti = data.iscritti || [];
+          const utente = await getnomeutente();
+          const isUserIscritto = iscritti.includes(utente);
+          setIsIscritto(isUserIscritto);
+          setLoading(false);
+        } catch (err) {
+          console.error(err);
+          Alert.alert('Errore', 'Errore nel caricamento');
+          setLoading(false);
+        }
+      };
       await caricaAnnuncio();
     };
     init();

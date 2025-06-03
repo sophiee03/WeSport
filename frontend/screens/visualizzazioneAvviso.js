@@ -12,21 +12,21 @@ export default function VisualizzaAvviso() {
   const route = useRoute();
   const { idAvviso } = route.params;
 
-  const caricaAvviso = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/${idAvviso}`);
-      if (!res.ok) throw new Error('Errore nel caricamento dell\'avviso');
-      const data = await res.json();
-      setAvviso(data);
-      setLoading(false);
-    } catch (err) {
-      console.error(err);
-      Alert.alert('Errore', 'Errore nel caricamento dell\'avviso');
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+      const caricaAvviso = async () => {
+        try {
+          const res = await fetch(`${BASE_URL}/${idAvviso}`);
+          if (!res.ok) throw new Error('Errore nel caricamento dell\'avviso');
+          const data = await res.json();
+          setAvviso(data);
+          setLoading(false);
+        } catch (err) {
+          console.error(err);
+          Alert.alert('Errore', 'Errore nel caricamento dell\'avviso');
+          setLoading(false);
+        }
+      };
+
       caricaAvviso();
   }, []);
 
@@ -66,11 +66,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 16,
   },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -102,9 +97,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     color: '#333',
-  },
-  errorText: {
-    color: 'red',
-    textAlign: 'center',
   },
 });

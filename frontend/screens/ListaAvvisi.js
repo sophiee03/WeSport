@@ -21,7 +21,7 @@ export default function ListaAvvisi() {
       const res = await fetch(BASE_URL);
       if (!res.ok) throw new Error('Errore nel caricamento degli avvisi');
       const data = await res.json();
-      setAvvisi(data);
+      setAvvisi(data.items);
     } catch (err) {
       Alert.alert('Errore', 'Errore nel caricamento degli avvisi');
     }

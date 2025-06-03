@@ -35,7 +35,7 @@ export default function visuaAreaSportiva({ areaSportiva }) {
       <Text>{areaSportiva.privata ? "Sì" : "No"}</Text>
 
       <Text style={styles.label}>Recensione:</Text>
-      <Text>{areaSportiva.recensione}</Text>
+      <Text>{areaSportiva.mediaVoti}</Text>
 
       <BarraSezioni />
     </View>
@@ -45,14 +45,6 @@ export default function visuaAreaSportiva({ areaSportiva }) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-  },
-  Button: {
-    backgroundColor: '#007bff',
-    borderRadius: 20,
-    width: 36,
-    height: 36,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
   title: {
     fontSize: 24,
