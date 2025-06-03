@@ -7,7 +7,7 @@ const BASE_URL = 'http://api.weSport.it/v1/Avvisi';
 
 const categorie = ['Tutti', 'Evento', 'Chiusura/Manutenzione', 'Festival'];
 
-export default function AvvisiScreen() {
+export default function ListaAvvisi() {
   const [avvisi, setAvvisi] = useState([]);
   const [categoria, setCategoria] = useState('Tutti');
   const navigation = useNavigation();
@@ -32,20 +32,20 @@ export default function AvvisiScreen() {
     : avvisi.filter(a => a.categoria === categoria);
 
   const renderItem = ({ item }) => (
-  <TouchableOpacity
-    style={styles.card}
-    onPress={() => navigation.navigate('visualizzaAvviso', { idAvviso: item.idAvviso })}
-  >
-    <View style={styles.rowTop}>
-      <Text style={styles.categoria}>{item.categoria}</Text>
-      <Text style={styles.data}>{new Date(item.data).toLocaleDateString()}</Text>
-    </View>
-    <View style={styles.rowBottom}>
-      <Text style={styles.stato}>{item.stato}</Text>
-      <Text numberOfLines={2} style={styles.testo}>{item.testo}</Text>
-    </View>
-  </TouchableOpacity>
-);
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => navigation.navigate('visualizzaAvviso', { idAvviso: item.idAvviso })}
+    >
+      <View style={styles.rowTop}>
+        <Text style={styles.categoria}>{item.categoria}</Text>
+        <Text style={styles.data}>{new Date(item.data).toLocaleDateString()}</Text>
+      </View>
+      <View style={styles.rowBottom}>
+        <Text style={styles.stato}>{item.stato}</Text>
+        <Text numberOfLines={2} style={styles.testo}>{item.testo}</Text>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
