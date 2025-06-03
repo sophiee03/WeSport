@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-const barraSezioni = () => {
+const BarraSezioni = () => {
   const navigation = useNavigation();
   const route = useRoute();
 
@@ -47,4 +47,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default barraSezioni;
+export default BarraSezioni;
