@@ -9,6 +9,7 @@ const sportData = [
   { nome: 'Calcio', colore: '#4CAF50' },
   { nome: 'Basket', colore: '#FF9800' },
   { nome: 'Corsa', colore: '#2196F3' },
+  { nome: 'Ciclismo', colore: '#007AFF' },
   { nome: 'Padel', colore: '#F44336' },
   { nome: 'Tennis', colore: '#212121' },
   { nome: 'Trekking', colore: '#6D3E3E' },
@@ -28,7 +29,7 @@ export default function Home() {
     if (sportPercorsi.includes(sportLower)) {
       navigation.navigate('ListaPercorsi', { categoria: sport });
     } else {
-      navigation.navigate('visualizzazioneAS', { sport });
+      navigation.navigate('visualizzazioneAS', { sport: sportLower });
     }  
   };
 
