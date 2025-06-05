@@ -17,11 +17,19 @@ const sportData = [
   { nome: 'Arrampicata', colore: '#FF5722' },
 ];
 
+const sportPercorsi = ['corsa', 'ciclismo', 'trekking'];
+
 export default function Home() {
   const navigation = useNavigation();
 
   const vaiAlleAree = (sport) => {
-    navigation.navigate('AreeSportive', { sport });
+    const sportLower = sport.toLowerCase();
+
+    if (sportPercorsi.includes(sportLower)) {
+      navigation.navigate('ListaPercorsi', { categoria: sport });
+    } else {
+      navigation.navigate('visualizzaAS', { sport });
+    }  
   };
 
   return (

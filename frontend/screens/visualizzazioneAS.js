@@ -102,12 +102,6 @@ export default function CercaAreeSportive() {
 
   return (
     <View style={styles.container}>
-      <View style={{ marginTop: 20 }}>
-                  <Button
-                  title="Torna indietro"
-                  onPress={() => navigation.goBack()}
-                  />
-              </View>
       <Text style={styles.titolo}>Cerca Aree Sportive</Text>
       <TextInput
         placeholder="Cerca per nome o sport..."
@@ -172,7 +166,7 @@ const styles = StyleSheet.create({
   },
   filtriContainer: {
     flexDirection: 'row',
-    marginBottom: 16,
+    marginBottom: 5,
   },
   filtro: {
     paddingHorizontal: 12,

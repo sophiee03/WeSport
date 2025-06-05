@@ -1,11 +1,20 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, Alert, StyleSheet, Picker, Slider, TouchableOpacity, Image, ScrollView} from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Slider, TouchableOpacity, Image, ScrollView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso'; 
 
-export default function CreazionePercorso({ navigation }) {
-  const [categoria, setCategoria] = useState('corsa');
+export default function CreazionePercorso({ navigation, route }) {
+  const categoriaParam = route.params?.categoria || '';
+
+  const [open, setOpen] = useState(false);
+  const [categoria, setCategoria] = useState(categoriaParam);
+  const [items, setItems] = useState([
+    { label: 'Corsa', value: 'corsa' },
+    { label: 'Trekking', value: 'trekking' },
+    { label: 'Ciclismo', value: 'ciclismo' },
+  ]);
   const [difficolta, setDifficolta] = useState(3);
   const [durata, setDurata] = useState('');
   const [descrizione, setDescrizione] = useState('');
@@ -81,11 +90,16 @@ export default function CreazionePercorso({ navigation }) {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.label}>Categoria (obbligatoria):</Text>
-      <Picker selectedValue={categoria} onValueChange={(val) => setCategoria(val)} style={styles.picker}>
-        <Picker.Item label="Corsa" value="corsa" />
-        <Picker.Item label="Trekking" value="trekking" />
-        <Picker.Item label="Ciclismo" value="ciclismo" />
-      </Picker>
+      <DropDownPicker
+        open={open}
+        value={categoria}
+        items={items}
+        setOpen={setOpen}
+        setValue={setCategoria}
+        setItems={setItems}
+        containerStyle={{ marginTop: 5, marginBottom: 10 }}
+        zIndex={1000}
+      />
 
       <Text style={styles.label}>Difficoltà: {difficolta}</Text>
       <Slider
