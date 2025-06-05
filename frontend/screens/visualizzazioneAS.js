@@ -28,23 +28,23 @@ export default function CercaAreeSportive() {
   }, []);
 
   useEffect(() => {
+    const filtra = () => {
+      if (query) salvaRicerca(query);
+
+      let filtrati = datiDB.filter((a) =>
+        a.nome.toLowerCase().includes(query.toLowerCase()) ||
+        a.sport.toLowerCase().includes(query.toLowerCase())
+      );
+
+      if (tipoFiltro !== 'Tutti') {
+        filtrati = filtrati.filter((a) => a.tipo === tipoFiltro);
+      }
+
+      setRisultati(filtrati);
+    };
     filtra();
   }, [query, tipoFiltro, datiDB, filtra]);
 
-  const filtra = () => {
-    if (query) salvaRicerca(query);
-
-    let filtrati = datiDB.filter((a) =>
-      a.nome.toLowerCase().includes(query.toLowerCase()) ||
-      a.sport.toLowerCase().includes(query.toLowerCase())
-    );
-
-    if (tipoFiltro !== 'Tutti') {
-      filtrati = filtrati.filter((a) => a.tipo === tipoFiltro);
-    }
-
-    setRisultati(filtrati);
-  };
 
   const salvaRicerca = async (termine) => {
     if (!termine || termine.trim() === '') return;
