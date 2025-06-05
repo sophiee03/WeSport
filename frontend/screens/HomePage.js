@@ -28,7 +28,7 @@ export default function Home() {
     if (sportPercorsi.includes(sportLower)) {
       navigation.navigate('ListaPercorsi', { categoria: sport });
     } else {
-      navigation.navigate('visualizzaAS', { sport });
+      navigation.navigate('visualizzazioneAS', { sport });
     }  
   };
 
