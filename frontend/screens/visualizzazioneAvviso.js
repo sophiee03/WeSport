@@ -28,7 +28,7 @@ export default function VisualizzaAvviso() {
       };
 
       caricaAvviso();
-  }, []);
+  }, [idAvviso]);
 
   if (loading) return <Text style={styles.caricamento}>Caricamento...</Text>;
   if (!avviso) return <Text style={styles.caricamento}>Avviso non trovato</Text>;

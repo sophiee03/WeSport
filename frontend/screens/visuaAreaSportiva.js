@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
 
-export default function visuaAreaSportiva({ areaSportiva }) {
+export default function VisuaAreaSportiva({ areaSportiva }) {
   const navigation = useNavigation();
 
   const mediaVoti = areaSportiva.numerovoti > 0

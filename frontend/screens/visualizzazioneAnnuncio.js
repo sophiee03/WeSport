@@ -40,7 +40,7 @@ export default function VisualizzaAnnuncio() {
       await caricaAnnuncio();
     };
     init();
-  }, []);
+  }, [idAnnuncio]);
 
   const gestisciIscrizione = async (azione) => {
     if (!isLoggedIn) {

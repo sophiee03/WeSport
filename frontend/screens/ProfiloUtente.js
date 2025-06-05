@@ -232,16 +232,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 30,
   },
-  pointsCircle: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 6,
-    borderColor: '#4CAF50',
-    justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative',
-  },
   plantCenterImage: {
     width: 60,
     height: 60,

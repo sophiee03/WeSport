@@ -29,7 +29,7 @@ export default function CercaAreeSportive() {
 
   useEffect(() => {
     filtra();
-  }, [query, tipoFiltro, datiDB]);
+  }, [query, tipoFiltro, datiDB, filtra]);
 
   const filtra = () => {
     if (query) salvaRicerca(query);

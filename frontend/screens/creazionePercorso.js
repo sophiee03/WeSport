@@ -16,7 +16,7 @@ export default function CreazionePercorso({ navigation }) {
       Alert.alert('Accesso negato', 'Devi effettuare il login per creare un percorso.');
       navigation.navigate('LoginUI'); // o altra schermata di login
     }
-  }, [isLoggedIn]);
+  }, [isLoggedIn, navigation]);
 
   // Funzione per scegliere immagine dal dispositivo
   const pickImage = async () => {

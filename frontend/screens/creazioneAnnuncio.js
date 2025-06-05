@@ -193,20 +193,5 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
   },
-  categoriaButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 12,
-    marginVertical: 3,
-    borderWidth: 1,
-    borderColor: '#888',
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-  },
-  categoriaSelected: {
-    backgroundColor: '#3498db',
-    borderColor: '#3498db',
-  },
-  textSelected: { color: 'white' },
-  text: { color: 'black' },
   creaButton: { marginTop: 20 },
 });
