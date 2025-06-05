@@ -26,7 +26,7 @@ const AppNavigation = () => {
     <Stack.Navigator initialRouteName="HomePage">
       <Stack.Screen name="HomePage" component={HomePage} />
       <Stack.Screen name="LoginUI" component={LoginUI} />
-      <Stack.Screen name="AreeSportive" component={visualizzazioneAS} />
+      <Stack.Screen name="visualizzazioneAS" component={visualizzazioneAS} />
       <Stack.Screen name="ProfiloUtente" component={ProfiloUtente} />
       <Stack.Screen name="ListaAnnunci" component={ListaAnnunci} />
       <Stack.Screen name="visualizzazioneAnnuncio" component={visualizzazioneAnnuncio} />
