@@ -43,7 +43,7 @@ export default function CercaAreeSportive() {
       setRisultati(filtrati);
     };
     filtra();
-  }, [query, tipoFiltro, datiDB, filtra]);
+  }, [query, tipoFiltro, datiDB]);
 
 
   const salvaRicerca = async (termine) => {
