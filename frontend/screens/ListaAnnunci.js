@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Picker} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { Menu, Button, Provider } from 'react-native-paper';
 import BarraSezioni from '../components/barraSezioni';
 import { isLoggedIn } from '../utils/apiutils'; 
 
@@ -12,6 +13,7 @@ export default function AnnunciScreen() {
   const [annunci, setAnnunci] = useState([]);
   const [categoria, setCategoriaFiltro] = useState('Tutti');
   const [loggedIn, setLoggedIn] = useState(false);
+  const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -65,9 +67,11 @@ export default function AnnunciScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
+    <Provider>
+      <View>
+      <View style={styles.container}>
         <Text style={styles.title}>Annunci</Text>
+
         <TouchableOpacity
           style={[styles.addButton, !loggedIn && styles.addButtonDisabled]}
           onPress={() => {
@@ -100,26 +104,31 @@ export default function AnnunciScreen() {
       </View>
 
       <View style={styles.filtroContainer}>
-        <Picker
-          selectedValue={categoria}
-          onValueChange={setCategoriaFiltro}
-          style={styles.picker}
-        >
-          {categorie.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
-          ))}
-        </Picker>
+          <Menu
+            visible={menuVisible}
+            onDismiss={() => setMenuVisible(false)}
+            anchor={
+              <Button mode="outlined" onPress={() => setMenuVisible(true)}>
+                Categoria: {categoria}
+              </Button>
+            }
+          >
+            {categorie.map(cat => (
+              <Menu.Item key={cat} onPress={() => { setCategoria(cat); setMenuVisible(false); }} title={cat} />
+            ))}
+          </Menu>
+        </View>
+
+        <FlatList
+          data={filtrati}
+          keyExtractor={(item) => item.idAvviso.toString()}
+          renderItem={renderItem}
+          contentContainerStyle={{ paddingBottom: 80 }}
+        />
+
+        <BarraSezioni />
       </View>
-
-      <FlatList
-        data={filtrati}
-        keyExtractor={(item) => item.idAnnuncio}
-        renderItem={renderItem}
-        contentContainerStyle={{ paddingBottom: 80 }}
-      />
-
-      <BarraSezioni />
-    </View>
+    </Provider>
   );
 }
 
@@ -143,10 +152,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: 'hidden',
   },
-  picker: {
-    height: 40,
-    width: '100%',
-  },
   card: {
     backgroundColor: '#f0f0f0',
     padding: 12,
@@ -160,6 +165,11 @@ const styles = StyleSheet.create({
   creatore: {
     fontWeight: '600',
     fontSize: 16,
+  },
+  data: {
+    fontSize: 14,
+    fontWeight: '600',
+    color: '#444',
   },
   categoria: {
     fontWeight: '600',

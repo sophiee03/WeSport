@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  View, Text, StyleSheet, ActivityIndicator,
-  FlatList, TouchableOpacity
-} from 'react-native';
+import {View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity} from 'react-native';
 
 const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso';
 

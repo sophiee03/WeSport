@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
+import { Menu, Button, Provider } from '@react-native-paper';
 import BarraSezioni from '../components/barraSezioni';
 
 const BASE_URL = 'http://api.weSport.it/v1/Avvisi';
-
 const categorie = ['Tutti', 'Evento', 'Chiusura/Manutenzione', 'Festival'];
 
 export default function ListaAvvisi() {
   const [avvisi, setAvvisi] = useState([]);
   const [categoria, setCategoria] = useState('Tutti');
+  const [menuVisible, setMenuVisible] = useState(false);
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -49,19 +49,24 @@ export default function ListaAvvisi() {
   );
 
   return (
+    <Provider>
     <View style={styles.container}>
       <Text style={styles.title}>Avvisi</Text>
 
       <View style={styles.filtroContainer}>
-        <Picker
-          selectedValue={categoria}
-          onValueChange={setCategoria}
-          style={styles.picker}
+        <Menu
+          visible={menuVisible}
+          onDismiss={() => setMenuVisible(false)}
+          anchor={
+            <Button mode="outlined" onPress={() => setMenuVisible(true)}>
+              Categoria: {categoria}
+            </Button>
+          }
         >
           {categorie.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
+            <Menu.Item key={cat} onPress={() => { setCategoria(cat); setMenuVisible(false); }} title={cat} />
           ))}
-        </Picker>
+        </Menu>
       </View>
 
       <FlatList
@@ -73,6 +78,7 @@ export default function ListaAvvisi() {
 
       <BarraSezioni />
     </View>
+    </Provider>
   );
 }
 
@@ -80,15 +86,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#fff', paddingHorizontal: 16, paddingTop: 16 },
   title: { fontSize: 24, fontWeight: 'bold', marginBottom: 12 },
   filtroContainer: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 6,
     marginBottom: 12,
-    overflow: 'hidden',
-  },
-  picker: {
-    height: 40,
-    width: '100%',
   },
   card: {
     backgroundColor: '#f2f2f2',
