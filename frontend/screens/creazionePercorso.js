@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  Alert,
-  StyleSheet,
-  Picker,
-  Slider,
-  TouchableOpacity,
-  Image,
-  ScrollView,
-} from 'react-native';
+import { View, Text, TextInput, Button, Alert, StyleSheet, Picker, Slider, TouchableOpacity, Image, ScrollView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 
 const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso'; 
