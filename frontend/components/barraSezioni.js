@@ -35,7 +35,7 @@ const BarraSezioni = () => {
 const styles = StyleSheet.create({
   footerNav: {
     position: 'absolute',
-    bottom: 0,
+    bottom: 50,
     left: 0,
     right: 0,
     height: 60,

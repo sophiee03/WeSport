@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, Picker, Slider, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Platform} from 'react-native';
+import { View, Text, Slider, TextInput, Button, Alert, StyleSheet, TouchableOpacity, Platform} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import DropDownPicker from 'react-native-dropdown-picker';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { isLoggedIn, getnomeutente } from '../utils/apiutils'; 
 import BarraSezioni from '../components/barraSezioni';
 
@@ -14,31 +15,32 @@ export default function CreaAnnuncio() {
   const [loggedIn, setLoggedIn] = useState(false);
   const navigation = useNavigation();
 
+  const [open, setOpen] = useState(false);
   const [categoria, setCategoria] = useState(null);
+  const [categorieList, setCategorieList] = useState(
+    categorie.map(cat => ({ label: cat, value: cat }))
+  );
   const [Npersone, setNpersone] = useState(1);
   const [descrizione, setDescrizione] = useState('');
   const [data, setData] = useState(null);
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showTimePicker, setShowTimePicker] = useState(false);
+  const [pickerMode, setPickerMode] = useState(null); 
+  const [showPicker, setShowPicker] = useState(false);
 
-  // Gestione selezione data
-  const onChangeDate = (event, selectedDate) => {
-    setShowDatePicker(Platform.OS === 'ios');
-    if (selectedDate) {
+  useEffect(() => {
+    isLoggedIn().then(setLoggedIn);
+  }, []);
+
+  const handleConfirm = (selected) => {
+    if (selected) {
       const newDate = data ? new Date(data) : new Date();
-      newDate.setFullYear(selectedDate.getFullYear(), selectedDate.getMonth(), selectedDate.getDate());
+      if (pickerMode === 'date') {
+        newDate.setFullYear(selected.getFullYear(), selected.getMonth(), selected.getDate());
+      } else {
+        newDate.setHours(selected.getHours(), selected.getMinutes());
+      }
       setData(newDate);
     }
-  };
-
-  // Gestione selezione ora
-  const onChangeTime = (event, selectedTime) => {
-    setShowTimePicker(Platform.OS === 'ios');
-    if (selectedTime) {
-      const newDate = data ? new Date(data) : new Date();
-      newDate.setHours(selectedTime.getHours(), selectedTime.getMinutes());
-      setData(newDate);
-    }
+    setShowPicker(false);
   };
 
   const validaCampi = () => {
@@ -63,6 +65,7 @@ export default function CreaAnnuncio() {
     navigation.navigate('LoginUI');
     return;
   }
+
   if (!validaCampi()) return;
   
   const nuovoAnnuncio = {
@@ -102,19 +105,18 @@ export default function CreaAnnuncio() {
       <Text style={styles.title}>Crea Annuncio</Text>
 
       <Text style={styles.label}>Categoria</Text>
-      <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={categoria}
-          onValueChange={(itemValue) => setCategoria(itemValue)}
-          mode="dropdown"
-        >
-          <Picker.Item label="Seleziona una categoria" value={null} />
-          {categorie.map((cat) => (
-            <Picker.Item key={cat} label={cat} value={cat} />
-          ))}
-        </Picker>
-      </View>
-
+      <DropDownPicker
+        open={open}
+        value={categoria}
+        items={categorieList}
+        setOpen={setOpen}
+        setValue={setCategoria}
+        setItems={setCategorieList}
+        placeholder="Seleziona una categoria"
+        containerStyle={{ marginBottom: open ? 200 : 20 }}
+        style={styles.dropdown}
+        dropDownContainerStyle={{ borderColor: '#888' }}
+      />
 
       <Text style={styles.label}>Numero persone: {Npersone}</Text>
       <Slider
@@ -138,34 +140,31 @@ export default function CreaAnnuncio() {
         maxLength={500}
       />
 
-      <Text style={styles.label}>Data (opzionale)</Text>
+        <Text style={styles.label}>Data (opzionale)</Text>
       <Button
-        title={data ? data.toLocaleDateString() : 'Seleziona una data (opzionale)'}
-        onPress={() => setShowDatePicker(true)}
+        title={data ? data.toLocaleDateString() : 'Seleziona una data'}
+        onPress={() => {
+          setPickerMode('date');
+          setShowPicker(true);
+        }}
       />
-      {showDatePicker && (
-        <DateTimePicker
-          value={data || new Date()}
-          mode="date"
-          display="default"
-          onChange={onChangeDate}
-          minimumDate={new Date()}
-        />
-      )}
 
       <Text style={styles.label}>Ora (opzionale)</Text>
       <Button
-        title={data ? data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Seleziona un orario (opzionale)'}
-        onPress={() => setShowTimePicker(true)}
+        title={data ? data.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Seleziona un orario'}
+        onPress={() => {
+          setPickerMode('time');
+          setShowPicker(true);
+        }}
       />
-      {showTimePicker && (
-        <DateTimePicker
-          value={data || new Date()}
-          mode="time"
-          display="default"
-          onChange={onChangeTime}
-        />
-      )}
+
+      <DateTimePickerModal
+        isVisible={showPicker}
+        mode={pickerMode}
+        onConfirm={handleConfirm}
+        onCancel={() => setShowPicker(false)}
+        minimumDate={pickerMode === 'date' ? new Date() : undefined}
+      />
 
       <View style={styles.creaButton}>
         <Button title="CREA" onPress={creaAnnuncio} />
