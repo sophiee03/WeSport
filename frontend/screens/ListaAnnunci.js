@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert, Picker} from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert} from 'react-native';
+import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
 import { isLoggedIn } from '../utils/apiutils'; 
@@ -10,6 +11,7 @@ const categorie = ['Tutti', 'calcio', 'basket', 'corsa', 'padel', 'tennis', 'tre
 
 export default function AnnunciScreen() {
   const [annunci, setAnnunci] = useState([]);
+  const [open, setOpen] = useState(false);
   const [categoria, setCategoriaFiltro] = useState('Tutti');
   const [loggedIn, setLoggedIn] = useState(false);
   const navigation = useNavigation();
@@ -99,16 +101,19 @@ export default function AnnunciScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.filtroContainer}>
-        <Picker
-          selectedValue={categoria}
-          onValueChange={setCategoriaFiltro}
-          style={styles.picker}
-        >
-          {categorie.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
-          ))}
-        </Picker>
+      <View style={{ zIndex: 1000 }}>
+        <DropDownPicker
+          open={open}
+          value={categoria}
+          items={categorie.map(cat => ({ label: cat, value: cat }))}
+          setOpen={setOpen}
+          setValue={setCategoriaFiltro}
+          setItems={() => {}} // non necessario nel tuo caso
+          containerStyle={{ marginBottom: 12 }}
+          style={styles.dropdown}
+          dropDownStyle={{ backgroundColor: '#fafafa' }}
+          placeholder="Seleziona categoria"
+        />
       </View>
 
       <FlatList
@@ -143,9 +148,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: 'hidden',
   },
-  picker: {
+  dropdown: {
+    borderColor: '#ccc',
     height: 40,
-    width: '100%',
   },
   card: {
     backgroundColor: '#f0f0f0',

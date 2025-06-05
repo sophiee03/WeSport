@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Picker } from '@react-native-picker/picker';
+import DropDownPicker from 'react-native-dropdown-picker';
 import BarraSezioni from '../components/barraSezioni';
 
 const BASE_URL = 'http://api.weSport.it/v1/Avvisi';
@@ -10,6 +10,10 @@ const categorie = ['Tutti', 'Evento', 'Chiusura/Manutenzione', 'Festival'];
 
 export default function ListaAvvisi() {
   const [avvisi, setAvvisi] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [items, setItems] = useState(
+    categorie.map(cat => ({ label: cat, value: cat }))
+  );
   const [categoria, setCategoria] = useState('Tutti');
   const navigation = useNavigation();
 
@@ -52,17 +56,19 @@ export default function ListaAvvisi() {
     <View style={styles.container}>
       <Text style={styles.title}>Avvisi</Text>
 
-      <View style={styles.filtroContainer}>
-        <Picker
-          selectedValue={categoria}
-          onValueChange={setCategoria}
-          style={styles.picker}
-        >
-          {categorie.map(cat => (
-            <Picker.Item key={cat} label={cat} value={cat} />
-          ))}
-        </Picker>
-      </View>
+      <View style={{ zIndex: 1000, marginBottom: 12 }}>
+      <DropDownPicker
+        open={open}
+        value={categoria}
+        items={items}
+        setOpen={setOpen}
+        setValue={setCategoria}
+        setItems={setItems}
+        placeholder="Seleziona categoria"
+        style={styles.dropdown}
+        dropDownContainerStyle={{ borderColor: '#ccc' }}
+      />
+    </View>
 
       <FlatList
         data={filtrati}
@@ -86,9 +92,9 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     overflow: 'hidden',
   },
-  picker: {
+  dropdown: {
+    borderColor: '#ccc',
     height: 40,
-    width: '100%',
   },
   card: {
     backgroundColor: '#f2f2f2',
