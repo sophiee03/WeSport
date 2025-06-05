@@ -4,9 +4,10 @@ import { View, Text, Button, TextInput, FlatList, TouchableOpacity, StyleSheet, 
 import { useNavigation } from '@react-navigation/native'; 
 import BarraSezioni from '../components/barraSezioni';
 
-const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/';
+const BASE_URL = 'http://api.weSport.it/v1/sport/';
 
-export default function CercaAreeSportive() {
+export default function CercaAreeSportive( route ) {
+  const { sport } = route.params || {};
   const [datiDB, setDatiDB] = useState([]);
   const [query, setQuery] = useState('');
   const [tipoFiltro, setTipoFiltro] = useState('Tutti');
@@ -14,7 +15,9 @@ export default function CercaAreeSportive() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    fetch(`${BASE_URL}`)
+    if (!sport) return;
+    
+    fetch(`${BASE_URL}/${sport}`)
       .then((res) => {
         if (!res.ok) throw new Error("Errore nella risposta");
         return res.json();
