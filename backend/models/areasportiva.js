@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const areasportivaSchema = new mongoose.Schema({
     nome: {
-        type: string,
+        type: String,
         required: true
     },
     
@@ -21,21 +21,17 @@ const areasportivaSchema = new mongoose.Schema({
     selfDescription: String,
     
     privata: {
-        type: boolean,
+        type: Boolean,
         required: true
     },
     
     voti: [{
-        type: int
+        type: Number
     }],
 
-    numerovoti: int,
-    recensione: int,
-      required:
-        - nome
-        - zona
-        - categoria
-        - privata
+    numerovoti: Number,
+    recensione: Number,
+
 });
 
 module.exports = mongoose.model('AreaSportiva', areasportivaSchema);

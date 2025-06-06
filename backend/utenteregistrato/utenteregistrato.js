@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const utenteregistrato = require('../models/utenteregistrato');
+const UtenteRegistrato = require('../models/utenteregistrato');
 const { verifyToken } = require('../auth/auth');
 
 router.get('/utenteregistrato/:nomeutente', async (req, res) => {

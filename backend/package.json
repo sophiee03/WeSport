@@ -11,10 +11,12 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "expo": "^53.0.9",
     "express": "^5.1.0",
     "js-yaml": "^4.1.0",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.2",
     "swagger-ui-express": "^5.0.1",
     "yaml": "^2.7.1"

@@ -12,7 +12,7 @@ const annuncioSchema = new mongoose.Schema({
         required: true
     },
     Npersone: {
-        type: int,
+        type: Number,
         required: true
     },
         
@@ -24,7 +24,7 @@ const annuncioSchema = new mongoose.Schema({
 
     description: String,
     
-    dataOrario: date-time,
+    dataOrario: Date,
     
     iscritti: [{
         type: mongoose.Schema.Types.ObjectId,

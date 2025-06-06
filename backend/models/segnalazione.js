@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const segnalazioneSchema = new mongoose.Schema({
   
   idSegnalazione: { 
-    type: int,
+    type: Number,
     required: true 
   },
 
   data: {
-    type: date,
+    type: Date,
     required: true
   },
 
@@ -20,7 +20,7 @@ const segnalazioneSchema = new mongoose.Schema({
   },
 
   foto: {
-    type: string,
+    type: String,
     required: true,
     description: 'url della foto importata/scattata'
   },
@@ -28,7 +28,7 @@ const segnalazioneSchema = new mongoose.Schema({
   descrizione: String,
 
   stato: {
-    type: string,
+    type: String,
     enum: ['accettata', 'in elaborazione', 'rifiutata'], 
   }
 

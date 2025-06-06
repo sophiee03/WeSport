@@ -35,13 +35,13 @@ try {
 
 app.use('/api/annunci', require('./annuncio/annunci'));
 app.use('/api/areasportiva', require('./areasportiva/areasportiva'));
-app.use('/api/avvisi', require('./avviso/avvisi'));
+app.use('/api/avvisi', require('./avviso/avviso'));
 app.use('/api/utenteregistrato', require('./utenteregistrato/utenteregistrato'));
-app.use('/api/percorsi', require('./percorso/percorsi'));
-app.use('/api/segnalazioni', require('./segnalazione/segnalazioni'));
-app.use('/api/chat', require('./chats/chat'));
+app.use('/api/percorsi', require('./percorso/percorso'));
+app.use('/api/segnalazioni', require('./segnalazione/segnalazione'));
+app.use('/api/chat', require('./chats/chats'));
 app.use('/api/messaggio', require('./messaggio/messaggio'));
-app.use('/api/auth', require('./auth/auth'));
+//app.use('/api/auth', require('./auth/auth'));
 
 app.listen(PORT, () => {
   console.log(`Server in esecuzione su http://localhost:${PORT}`);

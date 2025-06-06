@@ -20,7 +20,7 @@ const utenteregistratoSchema = new mongoose.Schema({
   },
 
   punti: {
-    type: int,
+    type: Number,
     default: 0,
   },
 

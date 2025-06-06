@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const percorsoSchema = new mongoose.Schema({
     idPercorso: {
-        type: int,
+        type: Number,
         required: true
     },
 
@@ -19,15 +19,15 @@ const percorsoSchema = new mongoose.Schema({
         required: true
     },
 
-    difficolta: int,
-    durata: int,
+    difficolta: Number,
+    durata: Number,
 
     voti: [{
-        type: int
+        type: Number
     }],
 
-    numerovoti: int,
-    recensione: int,
+    numerovoti: Number,
+    recensione: Number,
     selfdescription: String,
 });
 

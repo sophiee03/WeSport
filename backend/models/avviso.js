@@ -2,12 +2,12 @@ const mongoose = require('mongoose');
 const avvisoSchema = new mongoose.Schema({
  
     idAvviso: {
-        type: int,
+        type: Number,
         required: true
     },
     
     data: {
-        type: date,
+        type: Date,
         required: true
     },
 

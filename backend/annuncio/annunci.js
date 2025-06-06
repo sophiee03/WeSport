@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 const Annuncio = require("../models/annuncio");
-const Utente = require("../models/utente");
+const UtenteRegistrato = require("../models/utenteregistrato");
 
-const { tokenChecker } = require("../auth/auth");
+const { verifyToken } = require("../auth/auth");
 
 // GET per recuperare tutti gli annunci
-router.get('/annuncio', tokenChecker, async (req, res) => {
+router.get('/annuncio', verifyToken, async (req, res) => {
   try {
     const annuncio = await annuncio.find();
     res.json(annuncio); 
@@ -18,7 +18,7 @@ router.get('/annuncio', tokenChecker, async (req, res) => {
 });
 
 //POST per creare nuovo annuncio
-router.post('/annuncio', tokenChecker, async (req, res) => {
+router.post('/annuncio', verifyToken, async (req, res) => {
   try {
     const newannuncio = new annuncio(req.body); 
     const savedannuncio = await newannuncio.save(); 
@@ -30,7 +30,7 @@ router.post('/annuncio', tokenChecker, async (req, res) => {
 });
 
 //GET iscritti a un annuncio
-router.get('/annuncio/:idAnnuncio/iscritti', tokenChecker, async (req, res) => {
+router.get('/annuncio/:idAnnuncio/iscritti', verifyToken, async (req, res) => {
   try {
     const annuncio = await Annuncio.findById(req.params.idAnnuncio).populate('members', '-password');
     if (!annuncio) return res.status(404).json({ message: 'Annuncio non trovato' });
@@ -42,9 +42,9 @@ router.get('/annuncio/:idAnnuncio/iscritti', tokenChecker, async (req, res) => {
 });
 
 // POST iscrivi utente all'annuncio
-router.post('/annuncio/:idAnnuncio/iscritti', tokenChecker, async (req, res) => {
+router.post('/annuncio/:idAnnuncio/iscritti', verifyToken, async (req, res) => {
   try {
-    const utente = await Utente.findOne({ nomeutente: req.user.nomeutente });
+    const utente = await UtenteRegistrato.findOne({ nomeutente: req.user.nomeutente });
     if (!utente) return res.status(401).json({ message: 'Utente non trovato' });
 
     const annuncio = await Annuncio.findById(req.params.idAnnuncio);
@@ -64,9 +64,9 @@ router.post('/annuncio/:idAnnuncio/iscritti', tokenChecker, async (req, res) => 
 });
 
 // DELETE disiscrivi utente dall'annuncio
-router.delete('/annuncio/:idAnnuncio/iscritti', tokenChecker, async (req, res) => {
+router.delete('/annuncio/:idAnnuncio/iscritti', verifyToken, async (req, res) => {
   try {
-    const utente = await Utente.findOne({ nomeutente: req.user.nomeutente });
+    const utente = await UtenteRegistrato.findOne({ nomeutente: req.user.nomeutente });
     if (!utente) return res.status(401).json({ message: 'Utente non trovato' });
 
     const annuncio = await Annuncio.findById(req.params.idAnnuncio);
