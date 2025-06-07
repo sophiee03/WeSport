@@ -1,5 +1,5 @@
 {
-  "main": "node_modules/expo/AppEntry.js",
+  "main": "app.js",
   "scripts": {
     "start": "expo start",
     "build": "react-scripts build",
@@ -25,7 +25,8 @@
     "react-native-screens": "~4.10.0",
     "react-native-svg": "15.11.2",
     "react-native-vector-icons": "^10.2.0",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "expo-updates": "~0.28.14"
   },
   "devDependencies": {
     "metro": "^0.82.4"
