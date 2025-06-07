@@ -5,7 +5,7 @@ info:
   description: API per la gestione del servizio.
 
 servers:  
-  - url: https://api.weSport.it/v1
+  - url: https://wesport.onrender.com
 
 #------------------------------------------------------
 
