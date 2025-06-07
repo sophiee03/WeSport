@@ -3,11 +3,10 @@ import {View, Text, StyleSheet, ActivityIndicator, FlatList, TouchableOpacity} f
 import { Ionicons } from '@expo/vector-icons'; 
 import { Alert } from 'react-native';
 import { isLoggedIn } from '../utils/apiutils';
-
-const BASE_URL = 'http://api.weSport.it/v1/sport/';
+import { BASE_URL } from '../utils/path';
 
 export default function ListaPercorsi({ route, navigation }) {
-  const { categoria } = route.params; // ricevi categoria come parametro
+  const { categoria } = route.params;
   const [percorsi, setPercorsi] = useState([]);
   const [loading, setLoading] = useState(false);
   const [logged, setLogged] = useState(false);

@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet, Slider, TouchableOpacity, Image, ScrollView} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import DropDownPicker from 'react-native-dropdown-picker';
-
-const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso'; 
+import { BASE_URL } from '../utils/path';
 
 export default function CreazionePercorso({ navigation, route }) {
   const categoriaParam = route.params?.categoria || '';

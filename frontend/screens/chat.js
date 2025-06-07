@@ -5,9 +5,7 @@ import { getHeaders, getnomeutente } from '../utils/apiutils';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import BarraSezioni from '../components/barraSezioni';
 import Messaggio from '../components/messaggio.js';
-
-
-const BASE_URL = 'http://api.weSport.it/v1/Annunci';
+import { BASE_URL } from '../utils/path';
 
 export default function ChatScreen() {
   const route = useRoute();

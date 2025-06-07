@@ -5,8 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import BarraSezioni from '../components/barraSezioni'
 import { getnomeutente } from '../utils/apiutils'
-
-const BASE_URL = 'http://api.weSport.it/v1/';
+import { BASE_URL } from '../utils/path';
 
 export default function ProfiloUtente() {
   const navigation = useNavigation();

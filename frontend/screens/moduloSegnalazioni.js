@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { getnomeutente } from '../utils/apiutils'; 
 import BarraSezioni from '../components/barraSezioni';
 import * as ImagePicker from 'expo-image-picker';
+import { BASE_URL } from '../utils/path';
 
 const Segnalazione = async () => {
   const navigation = useNavigation();
@@ -39,7 +40,7 @@ const Segnalazione = async () => {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch('http://api.weSport.it/segnalazione', {
+      const response = await fetch(`${BASE_URL}/segnalazione`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

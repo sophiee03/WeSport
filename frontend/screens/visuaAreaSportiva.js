@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, FlatList, Button } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
+import { BASE_URL } from '../utils/path';
 
 export default function VisuaAreaSportiva({ areaSportiva }) {
   const navigation = useNavigation();

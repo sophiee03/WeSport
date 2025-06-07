@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
-
-const BASE_URL = 'http://api.weSport.it/v1/auth';
+import { BASE_URL } from '../utils/path';
 
 export default function LoginRegisterScreen() {
   const [nomeutente, setNomeutente] = useState('');

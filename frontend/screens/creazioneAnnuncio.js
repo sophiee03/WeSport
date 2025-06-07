@@ -5,8 +5,8 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
 import { isLoggedIn, getnomeutente } from '../utils/apiutils'; 
 import BarraSezioni from '../components/barraSezioni';
+import { BASE_URL } from '../utils/path';
 
-const BASE_URL = 'http://api.weSport.it/v1/Annunci';
 const categorie = ['Tutti', 'calcio', 'basket', 'corsa', 'padel', 'tennis', 'trekking', 'pallavolo/beachvolley', 'nuoto'];
 
 const MAX_PERSONE = 15;

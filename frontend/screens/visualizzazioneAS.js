@@ -3,8 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, Button, TextInput, FlatList, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import { useNavigation } from '@react-navigation/native'; 
 import BarraSezioni from '../components/barraSezioni';
-
-const BASE_URL = 'http://api.weSport.it/v1/sport';
+import { BASE_URL } from '../utils/path';
 
 export default function CercaAreeSportive({ route }) {
   const { sport } = route.params || {};

@@ -4,8 +4,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
 import { isLoggedIn } from '../utils/apiutils'; 
-
-const BASE_URL = 'http://api.weSport.it/v1/Annunci';
+import { BASE_URL } from '../utils/path';
 
 const categorie = ['Tutti', 'calcio', 'basket', 'corsa', 'padel', 'tennis', 'trekking', 'pallavolo/beachvolley', 'nuoto'];
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ActivityIndicator, ScrollView, Alert, Button } from 'react-native';
-
-const BASE_URL = 'http://api.weSport.it/v1/sport/{sport}/percorso';
+import { BASE_URL } from '../utils/path';
 
 export default function VisualizzaPercorso({ route, navigation }) {
   const { idPercorso } = route.params;

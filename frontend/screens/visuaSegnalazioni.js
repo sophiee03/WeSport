@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { BASE_URL } from '../utils/path';
 
 const StatusBadge = ({ stato }) => {
   let backgroundColor = '#ccc';

@@ -3,8 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, StyleSheet, Alert } from 'react
 import { useNavigation } from '@react-navigation/native';
 import DropDownPicker from 'react-native-dropdown-picker';
 import BarraSezioni from '../components/barraSezioni';
-
-const BASE_URL = 'http://api.weSport.it/v1/Avvisi';
+import { BASE_URL } from '../utils/path';
 
 const categorie = ['Tutti', 'Evento', 'Chiusura/Manutenzione', 'Festival'];
 

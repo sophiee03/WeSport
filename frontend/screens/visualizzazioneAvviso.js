@@ -2,8 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRoute, useNavigation } from '@react-navigation/native';
 import BarraSezioni from '../components/barraSezioni';
-
-const BASE_URL = 'http://api.weSport.it/v1/Avvisi';
+import { BASE_URL } from '../utils/path';
 
 export default function VisualizzaAvviso() {
   const [avviso, setAvviso] = useState(null);

@@ -3,8 +3,7 @@ import { View, Text, Button, Alert, StyleSheet, TouchableOpacity } from 'react-n
 import { useRoute, useNavigation } from '@react-navigation/native';
 import { getHeaders, isLoggedIn, getnomeutente } from '../utils/apiutils';
 import BarraSezioni from '../components/barraSezioni';
-
-const BASE_URL = 'http://api.weSport.it/v1/Annunci';
+import { BASE_URL } from '../utils/path';
 
 export default function VisualizzaAnnuncio() {
   const [annuncio, setAnnuncio] = useState(null);

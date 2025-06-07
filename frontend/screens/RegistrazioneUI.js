@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, Button, Alert, StyleSheet } from 'react-native';
+import { BASE_URL } from '../utils/path';
 
 export default function UsernameScreen({ route, navigation }) {
   const { token } = route.params;
