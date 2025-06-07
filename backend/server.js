@@ -39,6 +39,9 @@ try {
   console.error('Errore nel caricamento di WeSport.yaml:', err);
 }
 
+const login_reg = require('./auth/login_reg');
+app.use('/v1/auth', login_reg);
+
 app.use('/api/annunci', require('./annuncio/annunci'));
 app.use('/api/areasportiva', require('./areasportiva/areasportiva'));
 app.use('/api/avvisi', require('./avviso/avviso'));
@@ -47,7 +50,6 @@ app.use('/api/percorsi', require('./percorso/percorso'));
 app.use('/api/segnalazioni', require('./segnalazione/segnalazione'));
 app.use('/api/chat', require('./chats/chats'));
 app.use('/api/messaggio', require('./messaggio/messaggio'));
-app.use('/api/auth', require('./auth/auth'));
 
 app.listen(PORT, () => {
   console.log(`Server in esecuzione su ${BASE_URL}`);

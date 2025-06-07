@@ -1,25 +1,10 @@
-// Backend Node.js con Express + MongoDB (Mongoose) per login e registrazione
-
 const express = require('express');
-const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const cors = require('cors');
-require('dotenv').config();
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const router = express.Router();
+
 const JWT_SECRET = process.env.JWT_SECRET || 'supersegreto';
-
-// Middleware
-app.use(cors());
-app.use(express.json());
-
-// Connessione al database MongoDB
-mongoose.connect('mongodb://localhost:27017/wesport', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
 
 // Schema Utente
 const utenteSchema = new mongoose.Schema({
@@ -34,7 +19,7 @@ const utenteSchema = new mongoose.Schema({
 const Utente = mongoose.model('Utente', utenteSchema);
 
 // Endpoint di registrazione
-app.post('/v1/auth/register', async (req, res) => {
+router.post('/v1/auth/register', async (req, res) => {
   const { nomeutente, password, email, tipo, fotoprofilo, selfdescription } = req.body;
 
   if (!nomeutente || !password || !email || !tipo) {
@@ -68,9 +53,8 @@ app.post('/v1/auth/register', async (req, res) => {
   }
 });
 
-
 // Endpoint di login
-app.post('/v1/auth/login', async (req, res) => {
+router.post('/v1/auth/login', async (req, res) => {
   const { nomeutente, password } = req.body;
 
   try {
@@ -92,7 +76,4 @@ app.post('/v1/auth/login', async (req, res) => {
   }
 });
 
-// Avvio server
-app.listen(PORT, () => {
-  console.log(`API auth avviata su http://localhost:${PORT}`);
-});
+module.exports = router;
