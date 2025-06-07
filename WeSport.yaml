@@ -901,21 +901,5 @@ components:
     LoginRequest:
       type: object
       required:
-<<<<<<< HEAD
-        - email
-        - password
-      properties:
-        email:
-          type: string
-          format: email
-          example: user@example.com
-        password:
-          type: string
-          format: password
-          example: "password123"
-
-        
-=======
         - token
         - expiresIn
->>>>>>> 0987a5f47d3cc3d6a384286fd7637e9fa7463b9f
