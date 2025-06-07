@@ -180,7 +180,7 @@ paths:
           description: Annuncio, chat o messaggi non trovati
 
 
-  /annuncio/{idAnnuncio}/iscritti:    #?????? è corretto? o devo mettere utenteregistrato?
+  /annuncio/{idAnnuncio}/iscritti:
     get:
       summary: Ottieni gli utenti iscritti a un annuncio (utente registrato)
       tags:
