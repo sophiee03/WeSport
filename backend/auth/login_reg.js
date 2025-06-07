@@ -1,22 +1,10 @@
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const UtenteRegistrato = require('../models/utenteregistrato');
 
 const router = express.Router();
-
 const JWT_SECRET = process.env.JWT_SECRET || 'supersegreto';
-
-// Schema Utente
-const utenteSchema = new mongoose.Schema({
-  nomeutente: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-  tipo: { type: String, required: true },
-  fotoprofilo: { type: String, required: false },
-  selfdescription: { type: String, required: false },
-});
-
-const Utente = mongoose.model('Utente', utenteSchema);
 
 // Endpoint di registrazione
 router.post('/v1/auth/register', async (req, res) => {
@@ -58,7 +46,7 @@ router.post('/v1/auth/login', async (req, res) => {
   const { nomeutente, password } = req.body;
 
   try {
-    const utente = await Utente.findOne({ nomeutente });
+    const utente = await UtenteRegistrato.findOne({ nomeutente });
     if (!utente) {
       return res.status(400).json({ message: 'Credenziali non valide' });
     }
