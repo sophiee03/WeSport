@@ -1,16 +1,13 @@
-// segnalazioni.test.js
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../application'); // Assicurati che punti al tuo file Express
+const app = require('../application'); 
 let token;
+
 
 beforeAll(async () => {
   const response = await request(app)
     .post('/api/auth/login')
-    .send({
-      email: 'lucaverdi03@gmail.com',
-      password: 'password123'
-    });
+    .send({nomeutente: 'tuoNomeUtenteTest', password: 'tuaPasswordTest' });
 
   token = response.body.token;
 });
@@ -78,7 +75,11 @@ describe('POST /api/segnalazioni', () => {
     expect(res.statusCode).toBeGreaterThanOrEqual(400);
   });
 
+});
+
+
   afterAll(async () => {
-  await mongoose.connection.close();
-  });
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.connection.close();
+  }
 });

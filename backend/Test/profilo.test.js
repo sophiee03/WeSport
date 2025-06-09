@@ -1,15 +1,12 @@
 const request = require('supertest');
 const mongoose = require('mongoose');
-const app = require('../application'); // importa la tua app Express
+const app = require('../application'); 
 let token;
 
 beforeAll(async () => {
   const response = await request(app)
     .post('/api/auth/login')
-    .send({
-      email: 'lucaverdi03@gmail.com',
-      password: 'password123'
-    });
+    .send({nomeutente: 'tuoNomeUtenteTest', password: 'tuaPasswordTest' });
   token = response.body.token;
 });
 
@@ -32,7 +29,11 @@ describe('GET /api/utenteregistrato', () => {
     expect(res.body).toHaveProperty('message', 'utente non autorizzato');
   });
 
-  afterAll(async () => {
-  await mongoose.connection.close();
-  });
+  
+});
+
+afterAll(async () => {
+  if (mongoose.connection.readyState !== 0) {
+    await mongoose.connection.close();
+  }
 });

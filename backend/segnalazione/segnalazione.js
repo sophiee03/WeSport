@@ -3,6 +3,7 @@ const router = express.Router();
 const Segnalazione = require('../models/segnalazione');
 const { verifyToken } = require('../auth/auth');
 
+
 //GET le mie segnalazioni
 router.get('/utenteregistrato/:nomeutente/segnalazione', verifyToken, async (req, res) => {
   try {

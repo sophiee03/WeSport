@@ -1,17 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const avviso = require('../models/avviso');
+const Avviso = require('../models/avviso');
+const { verifyToken } = require('../auth/auth');
 
-//GET tutti gli avvisi / avvisi filtrati
-router.get('/', async (req, res) => {
+// GET tutti gli avvisi / avvisi filtrati
+router.get('/', verifyToken, async (req, res) => {
   try {
     const { tipo } = req.query;
-
-    // Se viene fornito un tipo, filtra per tipo
     const query = tipo ? { tipo } : {};
 
     const avvisi = await Avviso.find(query);
-    res.json(avvisi); 
+    res.json(avvisi);
   } catch (err) {
     console.error(err);
     res.status(500).json({ errore: 'Errore nel recupero dei dati' });
@@ -19,11 +18,11 @@ router.get('/', async (req, res) => {
 });
 
 // GET singolo avviso
-router.get('/avviso/:idAvviso', async (req, res) => {
-  const { id } = req.params;
+router.get('/:idAvviso', verifyToken, async (req, res) => {
+  const { idAvviso } = req.params;
 
   try {
-    const avviso = await Avviso.findById(id);
+    const avviso = await Avviso.findById(idAvviso);
     if (!avviso) {
       return res.status(404).json({ errore: 'Avviso non trovato' });
     }
@@ -32,6 +31,25 @@ router.get('/avviso/:idAvviso', async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ errore: 'Errore nel recupero dell\'avviso' });
+  }
+});
+
+// POST nuovo avviso
+router.post('/', verifyToken, async (req, res) => {
+  try {
+    const { titolo, descrizione, data } = req.body;
+
+    if (!titolo || !descrizione || !data) {
+      return res.status(400).json({ errore: 'Dati mancanti' });
+    }
+
+    const nuovoAvviso = new Avviso({ titolo, descrizione, data });
+    await nuovoAvviso.save();
+
+    res.status(201).json({ id: nuovoAvviso._id, message: 'Avviso creato con successo' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ errore: 'Errore nella creazione dell\'avviso' });
   }
 });
 

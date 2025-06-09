@@ -7,17 +7,23 @@ const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
+process.env.MONGO_URI = "mongodb://localhost:27017/test";
+
+
 const app = express();
+
 
 // Middleware
 app.use(cors());
 app.use(express.json());
 
 // Connessione al database MongoDB
-mongoose.connect(process.env.MONGODB_URI, {
+mongoose.connect(process.env.MONGODB_URI
+  /*, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-})
+}*/
+)
 .then(() => {
   if (process.env.NODE_ENV !== 'test') {
     console.log('MongoDB connesso');
@@ -50,5 +56,6 @@ app.use('/api/percorsi', require('./percorso/percorso'));
 app.use('/api/segnalazioni', require('./segnalazione/segnalazione'));
 app.use('/api/chat', require('./chats/chats'));
 app.use('/api/messaggio', require('./messaggio/messaggio'));
+
 
 module.exports = app;
