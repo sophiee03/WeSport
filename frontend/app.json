@@ -6,20 +6,9 @@
       }
     },
     "owner": "sophieeeee",
-    "runtimeVersion": {
-      "policy": "appVersion"
-    },
+    "runtimeVersion": "1.0.0",
     "updates": {
       "url": "https://u.expo.dev/2c4e831e-b597-491c-8e9e-39057792c043"
-    },
-    "android": {
-      "package": "com.sophieeeee.frontend"
-    },
-    "ios": {
-      "bundleIdentifier": "com.sophieeeee.frontend",
-      "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
-      }
     }
   }
 }
