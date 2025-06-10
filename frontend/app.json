@@ -1,5 +1,6 @@
 {
   "expo": {
+    "jsEngine": "jsc",
     "extra": {
       "eas": {
         "projectId": "2c4e831e-b597-491c-8e9e-39057792c043"
