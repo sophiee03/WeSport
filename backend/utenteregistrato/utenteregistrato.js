@@ -3,7 +3,7 @@ const router = express.Router();
 const UtenteRegistrato = require('../models/utenteregistrato');
 const { verifyToken } = require('../auth/auth');
 
-router.get('/utenteregistrato/:nomeutente', async (req, res) => {
+router.get('/:nomeutente', async (req, res) => {
   try {
     const { nomeutente } = req.params;
     const utente = await UtenteRegistrato.findOne({ nomeutente });
@@ -15,7 +15,7 @@ router.get('/utenteregistrato/:nomeutente', async (req, res) => {
 });
 
 //DELETE elimina utente registrato
-router.delete('/utenteregistrato/:nomeutente', verifyToken, async (req, res) => {
+router.delete('/:nomeutente', verifyToken, async (req, res) => {
   try {
     const { nomeutente } = req.params;
 
@@ -34,7 +34,7 @@ router.delete('/utenteregistrato/:nomeutente', verifyToken, async (req, res) => 
 });
 
 // PUT modifica utente registrato
-router.put('/utenteregistrato/:nomeutente', verifyToken, async (req, res) => {
+router.put('/:nomeutente', verifyToken, async (req, res) => {
   try {
     const { nomeutente } = req.params;
 
