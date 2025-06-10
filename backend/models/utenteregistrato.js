@@ -14,14 +14,14 @@ const utenteregistratoSchema = new mongoose.Schema({
 
   email: {
     type: String,
-    required: true,
+    //required: true,
     unique: true 
   },
 
   tipo: {
     type: String,
     enum: ['utente', 'azienda', 'aziendaVer'],
-    required: true
+    //required: true
   },
 
   punti: {

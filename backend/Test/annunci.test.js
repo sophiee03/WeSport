@@ -2,6 +2,7 @@ const request = require('supertest');
 const mongoose = require('mongoose');
 const app = require('../application');
 
+
 let token;
 let createdAnnuncioId;
 
@@ -65,8 +66,3 @@ describe('API /api/annunci', () => {
 
 });
 
-afterAll(async () => {
-  if (mongoose.connection.readyState !== 0) {
-    await mongoose.disconnect();  
-  }
-});

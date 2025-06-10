@@ -4,7 +4,7 @@ const Avviso = require('../models/avviso');
 const { verifyToken } = require('../auth/auth');
 
 // GET tutti gli avvisi / avvisi filtrati
-router.get('/', verifyToken, async (req, res) => {
+router.get(' ', verifyToken, async (req, res) => {
   try {
     const { tipo } = req.query;
     const query = tipo ? { tipo } : {};

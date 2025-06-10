@@ -78,8 +78,3 @@ describe('POST /api/segnalazioni', () => {
 });
 
 
-  afterAll(async () => {
-  if (mongoose.connection.readyState !== 0) {
-    await mongoose.connection.close();
-  }
-});
