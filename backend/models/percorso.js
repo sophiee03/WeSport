@@ -3,13 +3,13 @@ const mongoose = require('mongoose');
 const percorsoSchema = new mongoose.Schema({
     idPercorso: {
         type: Number,
-        required: true
+       required: true
     },
 
     idCreatore: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UtenteRegistrato',
-        required: true,
+       required: true,
         description: "id dell'utente che ha inviato il messaggio"
     },
 
