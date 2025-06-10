@@ -13,7 +13,8 @@
         "env": {
           "EXPO_USE_LEGACY_WORKFLOW": "1"
         }
-      }
+      },
+      "jsEngine": "jsc"
     },
     "preview": {
       "distribution": "internal",
@@ -23,17 +24,16 @@
         "env": {
           "EXPO_USE_LEGACY_WORKFLOW": "1"
         }
-      }
+      },
+      "jsEngine": "jsc"
     },
     "production": {
       "autoIncrement": true,
       "channel": "production",
       "android": {
-        "image": "latest",
-        "env": {
-          "EXPO_USE_LEGACY_WORKFLOW": "1"
-        }
-      }
+        "image": "latest"
+      },
+      "jsEngine": "jsc"
     }
   },
   "submit": {
