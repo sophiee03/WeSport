@@ -30,7 +30,7 @@ describe('API /api/annunci', () => {
     const res = await request(app)
       .get('/api/annunci');
     
-    // dipende da come il middleware gestisce errori, ma spesso è 401
+
     expect([401, 403]).toContain(res.statusCode);
     expect(res.body.message || res.body.errore).toBeDefined();
   });

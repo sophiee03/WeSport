@@ -22,7 +22,7 @@ const areasportivaSchema = new mongoose.Schema({
     
     privata: {
         type: Boolean,
-        required: true
+         required: true
     },
     
     voti: [{

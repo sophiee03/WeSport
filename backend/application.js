@@ -42,10 +42,10 @@ try {
 // Route
 app.use('/v1/auth', require('./auth/login_reg'));
 app.use('/api/annunci', require('./annuncio/annunci'));
-app.use('/api/areasportiva', require('./areasportiva/areasportiva'));
+app.use('/api/sport/:sport/areasportiva', require('./areasportiva/areasportiva'));
 app.use('/api/avvisi', require('./avviso/avviso'));
 app.use('/api/utenteregistrato', require('./utenteregistrato/utenteregistrato'));
-app.use('/api/percorsi', require('./percorso/percorso'));
+app.use('/api/sport/:sport/percorso', require('./percorso/percorso'));
 app.use('/api/segnalazioni', require('./segnalazione/segnalazione'));
 app.use('/api/chat', require('./chats/chats'));
 app.use('/api/messaggio', require('./messaggio/messaggio'));

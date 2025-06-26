@@ -4,7 +4,7 @@ const Percorso = require('../models/percorso');
 const { verifyToken } = require('../auth/auth');
 
 //GET percorsi per quello sport
-router.get('/sport/:sport/percorso', async (req, res) => {
+router.get('/:sport/percorso', async (req, res) => {
   try {
     const { sport } = req.params;
     const percorsi = await Percorso.find({ sport });
@@ -15,7 +15,7 @@ router.get('/sport/:sport/percorso', async (req, res) => {
 });
 
 //POST creare nuovo percorso
-router.post('/sport/:sport/percorso', verifyToken, async (req, res) => {
+router.post('/:sport/percorso', verifyToken, async (req, res) => {
   try {
     const { sport } = req.params;
     const newPercorso = new Percorso({ ...req.body, sport });

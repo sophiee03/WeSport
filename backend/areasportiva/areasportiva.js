@@ -4,7 +4,7 @@ const areasportiva = require('../models/areasportiva');
 const { tokenChecker } = require('../auth/auth')
 
 //GET areesportive
-router.get('/sport/:sport/areesportive', async (req, res) => {
+router.get('/:sport/areesportive', async (req, res) => {
   try {
     const { zona } = req.query;
     // Se viene fornita una zona, filtra per zona
@@ -19,7 +19,7 @@ router.get('/sport/:sport/areesportive', async (req, res) => {
 });
 
 //GET singola area sportiva
-router.get('/sport/:sport/areesportive/:nome', async (req, res) => {
+router.get('/:sport/areesportive/:nome', async (req, res) => {
   const { id } = req.params;
 
   try {
