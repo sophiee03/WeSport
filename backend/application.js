@@ -7,9 +7,6 @@ const yaml = require('js-yaml');
 const swaggerUi = require('swagger-ui-express');
 require('dotenv').config();
 
-process.env.MONGODB_URI = "mongodb://localhost:27017/test";
-
-
 const app = express();
 
 
@@ -18,11 +15,8 @@ app.use(cors());
 app.use(express.json());
 
 // Connessione al database MongoDB
-mongoose.connect(process.env.MONGODB_URI , {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}
-)
+mongoose.connect(process.env.MONGODB_URI)
+
 .then(() => {
   if (process.env.NODE_ENV !== 'test') {
     console.log('MongoDB connesso');
